@@ -29,4 +29,15 @@ spring:
     username: sa
     password:
   h2.console.enabled: true
+  security:
+    # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#security-properties
+    user:
+      name: user
+      password: password
+      roles: USER
 
+logging:
+  level:
+    root: WARN
+    com.example.restvoting28: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
