@@ -54,4 +54,7 @@ public class User extends BaseEntity implements Serializable {
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
     }
+    public void normalize() {
+        email = StringUtils.hasText(email) ? email.toLowerCase() : null;
+    }
 }
