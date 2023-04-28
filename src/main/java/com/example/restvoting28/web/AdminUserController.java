@@ -1,8 +1,10 @@
 package com.example.restvoting28.web;
 
+import com.example.restvoting28.dto.PasswordRequest;
 import com.example.restvoting28.model.User;
 import com.example.restvoting28.repository.UserRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,4 +60,9 @@ public class AdminUserController extends AbstractUserController {
         super.delete(id);
     }
 
+    @PostMapping("/{id}/change_password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changepassword(@NotNull @RequestBody PasswordRequest request, @PathVariable long id) {
+        super.changePassword(request.getNewPassword(), id);
+    }
 }

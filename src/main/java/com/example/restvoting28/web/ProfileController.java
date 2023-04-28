@@ -1,10 +1,13 @@
 package com.example.restvoting28.web;
 
+import com.example.restvoting28.dto.PasswordRequest;
+import com.example.restvoting28.exception.IllegalRequestDataException;
 import com.example.restvoting28.model.Role;
 import com.example.restvoting28.model.User;
 import com.example.restvoting28.repository.UserRepository;
 import com.example.restvoting28.security.AuthUser;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Set;
+
+import static com.example.restvoting28.config.WebSecurityConfig.PASSWORD_ENCODER;
 
 @RestController
 @RequestMapping(ProfileController.URL)
@@ -51,5 +56,14 @@ public class ProfileController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         super.delete(authUser.id());
+    }
+
+    @PostMapping("/change_password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(@NotNull @RequestBody PasswordRequest request, @AuthenticationPrincipal AuthUser authUser) {
+        if (!PASSWORD_ENCODER.matches(request.getOldPassword(), authUser.getUser().getPassword())) {
+            throw new IllegalRequestDataException("Wrong old password");
+        }
+        super.changePassword(request.getNewPassword(), authUser.id());
     }
 }

@@ -1,6 +1,5 @@
 package com.example.restvoting28.web;
 
-import com.example.restvoting28.exception.IllegalRequestDataException;
 import com.example.restvoting28.model.User;
 import com.example.restvoting28.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -56,13 +54,9 @@ public abstract class AbstractUserController {
     }
 
     @Transactional
-    public void changePassword(String oldPassword, String newPassword, long id) {
+    public void changePassword(String newPassword, long id) {
         log.info("change password for user with id={}", id);
-        Assert.isTrue(newPassword.length() >= 5 && newPassword.length() <= 32, "the password size must be in the range from 5 to 32");
         User user = userRepository.getExisted(id);
-        if (!PASSWORD_ENCODER.matches(oldPassword, user.getPassword())) {
-            throw new IllegalRequestDataException("Wrong old password");
-        }
         user.setPassword(PASSWORD_ENCODER.encode(newPassword));
         userRepository.save(user);
     }
