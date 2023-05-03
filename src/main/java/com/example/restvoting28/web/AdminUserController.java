@@ -3,11 +3,12 @@ package com.example.restvoting28.web;
 import com.example.restvoting28.dto.PasswordRequest;
 import com.example.restvoting28.model.User;
 import com.example.restvoting28.repository.UserRepository;
-import jakarta.validation.Valid;
+import com.example.restvoting28.validation.View;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(AdminUserController.URL)
+@Validated
 public class AdminUserController extends AbstractUserController {
     public static final String URL = "/api/admin/users";
 
@@ -39,7 +41,7 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
+    public ResponseEntity<User> createWithLocation(@Validated(View.OnCreate.class) @RequestBody User user) {
         User created = super.create(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(URL + "/{id}")
@@ -50,7 +52,7 @@ public class AdminUserController extends AbstractUserController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public User update(@Valid @RequestBody User user, @PathVariable long id) {
+    public User update(@Validated(View.OnUpdate.class) @RequestBody User user, @PathVariable long id) {
         return super.update(user, id);
     }
 
@@ -62,7 +64,7 @@ public class AdminUserController extends AbstractUserController {
 
     @PostMapping("/{id}/change_password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changepassword(@NotNull @RequestBody PasswordRequest request, @PathVariable long id) {
+    public void changePassword(@NotNull @Validated(View.Admin.class) @RequestBody PasswordRequest request, @PathVariable long id) {
         super.changePassword(request.getNewPassword(), id);
     }
 }

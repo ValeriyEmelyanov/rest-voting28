@@ -1,8 +1,10 @@
 package com.example.restvoting28.model;
 
+import com.example.restvoting28.validation.View;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -40,7 +42,8 @@ public class User extends BaseEntity implements Serializable {
     private String lastName;
 
     @Column(name = "password")
-    @Size(max = 256)
+    @NotBlank(groups = {View.OnCreate.class})
+    @Size(min = 5, max = 128, groups = {View.OnCreate.class})
     // https://stackoverflow.com/a/12505165/548473
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -54,6 +57,7 @@ public class User extends BaseEntity implements Serializable {
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
     }
+
     public void normalize() {
         email = StringUtils.hasText(email) ? email.toLowerCase() : null;
     }
