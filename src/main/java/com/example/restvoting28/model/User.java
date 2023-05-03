@@ -1,5 +1,6 @@
 package com.example.restvoting28.model;
 
+import com.example.restvoting28.validation.NoHtml;
 import com.example.restvoting28.validation.View;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -31,14 +32,17 @@ public class User extends BaseEntity implements Serializable {
     @Email
     @NotEmpty
     @Size(max = 128)
+    @NoHtml
     private String email;
 
     @Column(name = "first_name")
     @Size(max = 128)
+    @NoHtml
     private String firstName;
 
     @Column(name = "last_name")
     @Size(max = 128)
+    @NoHtml
     private String lastName;
 
     @Column(name = "password")

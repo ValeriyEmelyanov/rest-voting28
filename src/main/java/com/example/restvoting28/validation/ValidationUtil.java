@@ -2,7 +2,9 @@ package com.example.restvoting28.validation;
 
 import com.example.restvoting28.exception.IllegalRequestDataException;
 import com.example.restvoting28.model.BaseEntity;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class ValidationUtil {
 
     public static void checkNew(BaseEntity entity) {
