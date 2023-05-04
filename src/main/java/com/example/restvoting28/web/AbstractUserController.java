@@ -2,11 +2,15 @@ package com.example.restvoting28.web;
 
 import com.example.restvoting28.model.User;
 import com.example.restvoting28.repository.UserRepository;
+import com.example.restvoting28.validation.UniqueMailValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +22,13 @@ import static com.example.restvoting28.validation.ValidationUtil.checkNew;
 public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
+    @Autowired
+    private UniqueMailValidator uniqueMailValidator;
+
+    @InitBinder("user")
+    protected void initUserBiding(WebDataBinder binder) {
+        binder.addValidators(uniqueMailValidator);
+    }
 
     public List<User> getAll() {
         log.info("get users all");
