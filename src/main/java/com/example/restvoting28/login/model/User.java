@@ -26,7 +26,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@ToString(callSuper = true, exclude = {"password"})
 public class User extends BaseEntity implements Serializable {
 
     @Column(name = "email", nullable = false, unique = true)

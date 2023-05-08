@@ -1,6 +1,7 @@
 package com.example.restvoting28.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public abstract class BaseEntity implements Persistable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(hidden = true)
     protected Long id;
 
     // doesn't work for hibernate lazy proxy
@@ -54,5 +56,10 @@ public abstract class BaseEntity implements Persistable<Long> {
     @Override
     public int hashCode() {
         return id == null ? 0 : id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ":" + id;
     }
 }
