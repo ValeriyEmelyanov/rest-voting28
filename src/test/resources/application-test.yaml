@@ -1,0 +1,5 @@
+spring:
+  init:
+    mode: always
+  cache:
+    type: none

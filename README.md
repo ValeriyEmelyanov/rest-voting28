@@ -20,10 +20,10 @@ Each restaurant provides a new menu each day.
 <a href="http://localhost:8080/doc">online documentation</a>
 
 ### Resources
-**/api/profile** - user profile <br>
-**/api/admin/users** - users management <br>
-**/api/restaurants** - restaurants info <br>
-**/api/admin/restaurants** - restaurants management <br>
+* **/api/profile** - user profile
+* **/api/admin/users** - users management
+* **/api/restaurants** - restaurants info
+* **/api/admin/restaurants** - restaurants management
 
 
 ### Examples of requests using the curl

@@ -15,11 +15,15 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Restaurant extends BaseEntity {
     @Column(name = "name", nullable = false, unique = true)
     @NotBlank
     @NoHtml
     @Size(min = 1, max = 255)
     private String name;
+
+    public Restaurant(Long id, String name) {
+        super(id);
+        this.name = name;
+    }
 }

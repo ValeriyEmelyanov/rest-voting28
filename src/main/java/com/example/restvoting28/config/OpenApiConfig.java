@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
                 version = "1.0",
                 description = """
                         <h3>Restaurant voting application</h3>
-                        <p><b>Тестовые параметры аутентификации:</b><br>
+                        <p><b>Test authentication parameters:</b><br>
                         - user@gmail.com / password<br>
                         - admin@gmail.com / admin<br>
                         """,
