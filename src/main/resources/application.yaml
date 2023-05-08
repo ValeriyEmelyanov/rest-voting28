@@ -41,3 +41,5 @@ logging:
     root: WARN
     com.example.restvoting28: DEBUG
     org.springframework.security.web.FilterChainProxy: DEBUG
+
+springdoc.swagger-ui.path: /doc
