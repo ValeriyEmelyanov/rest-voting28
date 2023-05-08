@@ -1,6 +1,6 @@
 package com.example.restvoting28.security;
 
-import com.example.restvoting28.model.User;
+import com.example.restvoting28.login.model.User;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.lang.NonNull;

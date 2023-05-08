@@ -1,4 +1,4 @@
-package com.example.restvoting28.model;
+package com.example.restvoting28.login.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

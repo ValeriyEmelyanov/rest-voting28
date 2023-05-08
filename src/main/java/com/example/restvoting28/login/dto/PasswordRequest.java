@@ -1,6 +1,6 @@
-package com.example.restvoting28.dto;
+package com.example.restvoting28.login.dto;
 
-import com.example.restvoting28.validation.View;
+import com.example.restvoting28.common.validation.View;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

@@ -1,8 +1,8 @@
-package com.example.restvoting28.web;
+package com.example.restvoting28.login.web;
 
-import com.example.restvoting28.model.User;
-import com.example.restvoting28.repository.UserRepository;
-import com.example.restvoting28.validation.UniqueMailValidator;
+import com.example.restvoting28.login.model.User;
+import com.example.restvoting28.login.UserRepository;
+import com.example.restvoting28.common.validation.UniqueMailValidator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.example.restvoting28.config.WebSecurityConfig.PASSWORD_ENCODER;
-import static com.example.restvoting28.validation.ValidationUtil.assureIdConsistent;
-import static com.example.restvoting28.validation.ValidationUtil.checkNew;
+import static com.example.restvoting28.common.validation.ValidationUtil.assureIdConsistent;
+import static com.example.restvoting28.common.validation.ValidationUtil.checkNew;
 
 @RequiredArgsConstructor
 public abstract class AbstractUserController {

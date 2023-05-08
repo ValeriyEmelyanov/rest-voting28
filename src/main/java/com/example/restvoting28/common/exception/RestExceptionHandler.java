@@ -1,4 +1,4 @@
-package com.example.restvoting28.exception;
+package com.example.restvoting28.common.exception;
 
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,8 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.example.restvoting28.exception.ErrorType.*;
-
 @RestControllerAdvice
 @AllArgsConstructor
 @Slf4j
@@ -40,22 +38,22 @@ public class RestExceptionHandler {
 
     private static final Map<Class<? extends Throwable>, ErrorType> HTTP_STATUS_MAP = new LinkedHashMap<>() {{
         // more specific first
-        put(NotFoundException.class, NOT_FOUND);
-        put(DataConflictException.class, DATA_CONFLICT);
-        put(IllegalRequestDataException.class, BAD_REQUEST);
-        put(AppException.class, APP_ERROR);
-        put(EntityNotFoundException.class, DATA_CONFLICT);
-        put(DataIntegrityViolationException.class, DATA_CONFLICT);
-        put(IllegalArgumentException.class, BAD_DATA);
-        put(NoHandlerFoundException.class, NOT_FOUND);
-        put(BindException.class, BAD_REQUEST);
-        put(ValidationException.class, BAD_REQUEST);
-        put(HttpRequestMethodNotSupportedException.class, BAD_REQUEST);
-        put(MissingServletRequestParameterException.class, BAD_REQUEST);
-        put(RequestRejectedException.class, BAD_REQUEST);
-        put(FileNotFoundException.class, BAD_REQUEST);
-        put(AccessDeniedException.class, FORBIDDEN);
-        put(AuthenticationException.class, UNAUTHORIZED);
+        put(NotFoundException.class, ErrorType.NOT_FOUND);
+        put(DataConflictException.class, ErrorType.DATA_CONFLICT);
+        put(IllegalRequestDataException.class, ErrorType.BAD_REQUEST);
+        put(AppException.class, ErrorType.APP_ERROR);
+        put(EntityNotFoundException.class, ErrorType.DATA_CONFLICT);
+        put(DataIntegrityViolationException.class, ErrorType.DATA_CONFLICT);
+        put(IllegalArgumentException.class, ErrorType.BAD_DATA);
+        put(NoHandlerFoundException.class, ErrorType.NOT_FOUND);
+        put(BindException.class, ErrorType.BAD_REQUEST);
+        put(ValidationException.class, ErrorType.BAD_REQUEST);
+        put(HttpRequestMethodNotSupportedException.class, ErrorType.BAD_REQUEST);
+        put(MissingServletRequestParameterException.class, ErrorType.BAD_REQUEST);
+        put(RequestRejectedException.class, ErrorType.BAD_REQUEST);
+        put(FileNotFoundException.class, ErrorType.BAD_REQUEST);
+        put(AccessDeniedException.class, ErrorType.FORBIDDEN);
+        put(AuthenticationException.class, ErrorType.UNAUTHORIZED);
     }};
 
     @ExceptionHandler(BindException.class)
@@ -83,7 +81,7 @@ public class RestExceptionHandler {
         } else {
             Throwable root = getRootCause(ex);
             log.error("Exception " + root + " at request " + path, root);
-            return createProblemDetail(ex, APP_ERROR, "Exception " + root.getClass().getSimpleName(), additionalParams);
+            return createProblemDetail(ex, ErrorType.APP_ERROR, "Exception " + root.getClass().getSimpleName(), additionalParams);
         }
     }
 

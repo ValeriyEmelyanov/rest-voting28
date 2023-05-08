@@ -1,4 +1,4 @@
-package com.example.restvoting28.exception;
+package com.example.restvoting28.common.exception;
 
 import org.springframework.http.HttpStatus;
 

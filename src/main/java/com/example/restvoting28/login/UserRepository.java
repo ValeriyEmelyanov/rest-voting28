@@ -1,7 +1,8 @@
-package com.example.restvoting28.repository;
+package com.example.restvoting28.login;
 
-import com.example.restvoting28.exception.NotFoundException;
-import com.example.restvoting28.model.User;
+import com.example.restvoting28.common.BaseRepository;
+import com.example.restvoting28.common.exception.NotFoundException;
+import com.example.restvoting28.login.model.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 

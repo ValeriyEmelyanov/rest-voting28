@@ -1,7 +1,7 @@
 package com.example.restvoting28.config;
 
-import com.example.restvoting28.model.Role;
-import com.example.restvoting28.repository.UserRepository;
+import com.example.restvoting28.login.model.Role;
+import com.example.restvoting28.login.UserRepository;
 import com.example.restvoting28.security.AuthUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

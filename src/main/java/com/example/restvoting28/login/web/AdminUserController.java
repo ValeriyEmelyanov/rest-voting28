@@ -1,9 +1,9 @@
-package com.example.restvoting28.web;
+package com.example.restvoting28.login.web;
 
-import com.example.restvoting28.dto.PasswordRequest;
-import com.example.restvoting28.model.User;
-import com.example.restvoting28.repository.UserRepository;
-import com.example.restvoting28.validation.View;
+import com.example.restvoting28.login.dto.PasswordRequest;
+import com.example.restvoting28.login.model.User;
+import com.example.restvoting28.login.UserRepository;
+import com.example.restvoting28.common.validation.View;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

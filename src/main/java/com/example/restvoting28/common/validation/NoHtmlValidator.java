@@ -1,4 +1,4 @@
-package com.example.restvoting28.validation;
+package com.example.restvoting28.common.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

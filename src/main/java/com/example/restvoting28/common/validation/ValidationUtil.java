@@ -1,7 +1,7 @@
-package com.example.restvoting28.validation;
+package com.example.restvoting28.common.validation;
 
-import com.example.restvoting28.exception.IllegalRequestDataException;
-import com.example.restvoting28.model.BaseEntity;
+import com.example.restvoting28.common.exception.IllegalRequestDataException;
+import com.example.restvoting28.common.model.BaseEntity;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

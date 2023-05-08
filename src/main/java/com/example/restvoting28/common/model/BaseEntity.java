@@ -1,4 +1,4 @@
-package com.example.restvoting28.model;
+package com.example.restvoting28.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

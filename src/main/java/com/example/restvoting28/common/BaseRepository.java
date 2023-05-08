@@ -1,6 +1,6 @@
-package com.example.restvoting28.repository;
+package com.example.restvoting28.common;
 
-import com.example.restvoting28.exception.NotFoundException;
+import com.example.restvoting28.common.exception.NotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,8 @@
-package com.example.restvoting28.model;
+package com.example.restvoting28.login.model;
 
-import com.example.restvoting28.validation.NoHtml;
-import com.example.restvoting28.validation.View;
+import com.example.restvoting28.common.model.BaseEntity;
+import com.example.restvoting28.common.validation.NoHtml;
+import com.example.restvoting28.common.validation.View;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

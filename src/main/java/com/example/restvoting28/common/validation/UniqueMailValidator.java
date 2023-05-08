@@ -1,7 +1,7 @@
-package com.example.restvoting28.validation;
+package com.example.restvoting28.common.validation;
 
-import com.example.restvoting28.model.User;
-import com.example.restvoting28.repository.UserRepository;
+import com.example.restvoting28.login.model.User;
+import com.example.restvoting28.login.UserRepository;
 import com.example.restvoting28.security.AuthUser;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import javax.swing.*;
 
 @Component
 @AllArgsConstructor
