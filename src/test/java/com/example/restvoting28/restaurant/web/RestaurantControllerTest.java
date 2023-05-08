@@ -3,7 +3,6 @@ package com.example.restvoting28.restaurant.web;
 import com.example.restvoting28.AbstractControllerTest;
 import com.example.restvoting28.restaurant.RestaurantRepository;
 import com.example.restvoting28.restaurant.model.Restaurant;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import static com.example.restvoting28.restaurant.web.UserTestData.ADMIN_MAIL;
 import static com.example.restvoting28.restaurant.web.UserTestData.USER_MAIL;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,7 +41,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(USER_MAIL)
-    void getAll() throws Exception{
+    void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(READ_URL))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -65,6 +64,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(READ_URL + "/" + RESTAURANT_CRAZY_COOK_ID))
                 .andExpect(status().isUnauthorized());
     }
+
     @Test
     @WithUserDetails(USER_MAIL)
     void getNotFound() throws Exception {
