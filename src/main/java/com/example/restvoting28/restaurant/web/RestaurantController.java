@@ -2,6 +2,7 @@ package com.example.restvoting28.restaurant.web;
 
 import com.example.restvoting28.restaurant.RestaurantRepository;
 import com.example.restvoting28.restaurant.model.Restaurant;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -35,13 +36,13 @@ public class RestaurantController {
 
     @GetMapping(READ_PATH + "/{id}")
     public Restaurant get(@PathVariable long id) {
-        log.info("Get restaurant by id={}", id);
+        log.info("Get the restaurant by id={}", id);
         return repository.getExisted(id);
     }
 
     @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
-        log.info("Create restaurant {}", restaurant);
+    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
+        log.info("Create the restaurant {}", restaurant);
         Restaurant created = repository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(URL + WRITE_PATH + "/{id}")
@@ -52,8 +53,8 @@ public class RestaurantController {
 
     @PutMapping(path = WRITE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Restaurant update(@RequestBody Restaurant restaurant, @PathVariable long id) {
-        log.info("Update restaurant {} with id={}", restaurant, id);
+    public Restaurant update(@Valid @RequestBody Restaurant restaurant, @PathVariable long id) {
+        log.info("Update the restaurant {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
         return repository.save(restaurant);
     }

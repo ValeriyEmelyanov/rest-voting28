@@ -7,7 +7,7 @@
 --       ('ADMIN', 2),
 --       ('USER', 2);
 
-insert into RESTAURANT (NAME)
-values ('Crazy Cook'),
-       ('Weeping Willow'),
-       ('Number One');
+--insert into RESTAURANT (NAME)
+--values ('Crazy Cook'),
+--       ('Weeping Willow'),
+--       ('Number One');
