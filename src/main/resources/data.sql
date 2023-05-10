@@ -1,6 +1,6 @@
-insert into USERS (EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
-values ('user@gmail.com', 'User_First', 'User_Last', '{noop}password'),
-       ('admin@gmail.com', 'Admin_First', 'Admin_Last', '{noop}admin');
+insert into USERS (EMAIL, FIRST_NAME, LAST_NAME, CONTACT, PASSWORD)
+values ('user@gmail.com', 'User_First', 'User_Last', '+7(007) 000 0009', '{noop}password'),
+       ('admin@gmail.com', 'Admin_First', 'Admin_Last', 't.me/AdminOne', '{noop}admin');
 
 insert into USER_ROLE (ROLE, USER_ID)
 values ('USER', 1),
