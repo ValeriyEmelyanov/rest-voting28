@@ -28,7 +28,7 @@ public class DishController {
     private final DishRepository repository;
 
     @GetMapping("/by-restaurant")
-    public List<Dish> getAllByRestaurant(@RequestParam long restaurantId) {
+    public List<Dish> getAllByRestaurantId(@RequestParam long restaurantId) {
         log.info("get all dishes by restaurantId={}", restaurantId);
         return repository.findAllByRestaurantIdOrderByName(restaurantId);
     }

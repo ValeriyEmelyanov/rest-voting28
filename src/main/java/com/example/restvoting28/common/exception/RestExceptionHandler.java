@@ -10,6 +10,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.firewall.RequestRejectedException;
@@ -54,6 +55,7 @@ public class RestExceptionHandler {
         put(FileNotFoundException.class, ErrorType.BAD_REQUEST);
         put(AccessDeniedException.class, ErrorType.FORBIDDEN);
         put(AuthenticationException.class, ErrorType.UNAUTHORIZED);
+        put(HttpMessageNotReadableException.class, ErrorType.BAD_DATA);
     }};
 
     @ExceptionHandler(BindException.class)

@@ -24,21 +24,51 @@ Each restaurant provides a new menu each day.
 * **/api/admin/users** - users management
 * **/api/restaurants** - restaurants info
 * **/api/admin/restaurants** - restaurants management
-
+* **/api/menu** - menu info
+* **/api/admin/menu** - menu management
 
 ### Examples of requests using the curl
 
 #### Get restaurants list
 ```
-    curl -X GET
-      http://localhost:8080/api/restaurants
-      -H 'Accept: application/json'
-      -u user@gmail.com:password
+curl -X GET
+  http://localhost:8080/api/restaurants
+  -H 'Accept: application/json'
+  -u user@gmail.com:password
 ```
 #### Get restaurant by id
 ```
-    curl -X GET
-      http://localhost:8080/api/restaurants/1
-      -H 'Accept: application/json'
-      -u user@gmail.com:password
+curl -X GET
+  http://localhost:8080/api/restaurants/1
+  -H 'Accept: application/json'
+  -u user@gmail.com:password
+```
+#### Add menu
+```
+curl -X POST \
+  'http://localhost:8080/api/admin/menu'
+  -H 'Accept: application/json'
+  -H 'Content-Type: application/json'
+  -u admin@gmail.com:admin
+  -d '{
+  "restaurantId": 1,
+  "date": "2023-02-05",
+  "items": [
+    {
+      "dishId": 1,
+      "price": 120
+    },
+    {
+      "dishId": 2,
+      "price": 140.5
+    }
+  ]
+}' 
+```
+#### Get menu by date
+```
+curl -X GET
+  'http://localhost:8080/api/menu/date/2023-02-04'
+  -H 'Accept: application/json'
+  -u user@gmail.com:password
 ```
