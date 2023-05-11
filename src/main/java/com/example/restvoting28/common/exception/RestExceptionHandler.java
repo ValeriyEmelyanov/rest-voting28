@@ -41,14 +41,15 @@ public class RestExceptionHandler {
         // more specific first
         put(NotFoundException.class, ErrorType.NOT_FOUND);
         put(DataConflictException.class, ErrorType.DATA_CONFLICT);
-        put(IllegalRequestDataException.class, ErrorType.BAD_REQUEST);
+        put(IllegalRequestDataException.class, ErrorType.BAD_DATA);
+        put(WrongTimeException.class, ErrorType.BAD_REQUEST);
         put(AppException.class, ErrorType.APP_ERROR);
         put(EntityNotFoundException.class, ErrorType.DATA_CONFLICT);
         put(DataIntegrityViolationException.class, ErrorType.DATA_CONFLICT);
         put(IllegalArgumentException.class, ErrorType.BAD_DATA);
         put(NoHandlerFoundException.class, ErrorType.NOT_FOUND);
         put(BindException.class, ErrorType.BAD_REQUEST);
-        put(ValidationException.class, ErrorType.BAD_REQUEST);
+        put(ValidationException.class, ErrorType.BAD_DATA);
         put(HttpRequestMethodNotSupportedException.class, ErrorType.BAD_REQUEST);
         put(MissingServletRequestParameterException.class, ErrorType.BAD_REQUEST);
         put(RequestRejectedException.class, ErrorType.BAD_REQUEST);

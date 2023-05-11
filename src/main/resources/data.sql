@@ -29,7 +29,7 @@ values (1, '2023-02-03'),
        (3, '2023-02-03'),
        (1, '2023-02-04');
 
-insert into MENU_ITEMS(MENU_ID, DISH_ID, PRICE)
+insert into MENU_ITEM (MENU_ID, DISH_ID, PRICE)
 values (1, 1, 120),
        (1, 2, 142.2),
        (1, 3, 60),
@@ -41,3 +41,7 @@ values (1, 1, 120),
        (3, 8, 55.5),
        (4, 2, 142),
        (4, 3, 62);
+
+insert into VOTE (USER_ID, RESTAURANT_ID, DATE)
+values (1, 1, '2023-02-03'),
+       (2, 2, '2023-02-03');

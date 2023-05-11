@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "menu_items")
+@Table(name = "menu_item")
 @Setter
 @Getter
 @NoArgsConstructor

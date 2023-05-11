@@ -1,5 +1,6 @@
 package com.example.restvoting28.restaurant.web;
 
+import com.example.restvoting28.common.exception.NotFoundException;
 import com.example.restvoting28.common.validation.View;
 import com.example.restvoting28.restaurant.MenuRepository;
 import com.example.restvoting28.restaurant.dto.MenuResponse;
@@ -38,6 +39,7 @@ public class MenuController {
 
     @GetMapping(READ_PATH + "/date/{date}")
     public List<MenuResponse> getAllByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("Get all menu by date={}", date);
         return repository.findAllByDate(date)
                 .stream()
                 .map(m -> conversionService.convert(m, MenuResponse.class))
@@ -45,14 +47,12 @@ public class MenuController {
     }
 
     @GetMapping(READ_PATH + "/restaurant/{restaurantId}/date/{date}")
-    public MenuResponse getAllByRestaurantAndDate(
+    public MenuResponse getByRestaurantAndDate(
             @PathVariable long restaurantId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<Menu> list = repository.findAllByRestaurantIdAndDate(restaurantId, date);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return conversionService.convert(list.get(0), MenuResponse.class);
+        Menu menu = repository.findByRestaurantIdAndDate(restaurantId, date)
+                .orElseThrow(() -> new NotFoundException("No menu by restaurantId=" + restaurantId + " and date=" + date));
+        return conversionService.convert(menu, MenuResponse.class);
     }
 
     @GetMapping(READ_PATH + "/{id}")
@@ -78,7 +78,7 @@ public class MenuController {
         assureIdConsistent(menu, id);
         Menu dbMenu = repository.getExisted(id);
         assureOwnerIdConsistent(menu, dbMenu.ownerId());
-        Menu updated = repository.save(prepareToSave(menu));
+        repository.save(prepareToSave(menu));
         Menu dbUpdated = repository.getExisted(id);
         return conversionService.convert(dbUpdated, MenuResponse.class);
     }

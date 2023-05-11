@@ -6,10 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface MenuRepository extends BaseRepository<Menu> {
     List<Menu> findAllByDate(LocalDate date);
 
-    List<Menu> findAllByRestaurantIdAndDate(long restaurantId, LocalDate date);
+    Optional<Menu> findByRestaurantIdAndDate(long restaurantId, LocalDate date);
 }
