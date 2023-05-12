@@ -16,16 +16,39 @@ If it is before 11:00 we assume that he changed his mind.
 If it is after 11:00 then it is too late, vote can't be changed
 Each restaurant provides a new menu each day.
 
+## Solution
+
+### Technologies
+* Java 17
+* Spring Boot
+* Spring security, Basic authentication
+* Spring Data JPA
+* H2 in memory database
+* OpenAPI
+* Lombok
+* JUnit 5, MockMVC
+
+### Description
+* Basic authentication with email and password
+* 2 types of users: admin and regular users
+* Admin has full access to users, restaurants, dishes and menu
+* Regular user can read restaurants, dishes, menu and reports
+* Regular users can vote on which restaurant they want to have lunch
+
 ## REST API documentation
-<a href="http://localhost:8080/doc">online documentation</a>
+<a href="http://localhost:8080/doc">online documentation</a> 
+<br> *the application must be running on localhost*
 
 ### Resources
 * **/api/profile** - user profile
 * **/api/admin/users** - users management
 * **/api/restaurants** - restaurants info
 * **/api/admin/restaurants** - restaurants management
+* **/api/admin/dishes** - restaurant dishes management
 * **/api/menu** - menu info
 * **/api/admin/menu** - menu management
+* **/votes** - voting
+* **/report** - reports
 
 ### Examples of requests using the curl
 
@@ -46,7 +69,7 @@ curl -X GET
 #### Add menu
 ```
 curl -X POST \
-  'http://localhost:8080/api/admin/menu'
+  http://localhost:8080/api/admin/menu
   -H 'Accept: application/json'
   -H 'Content-Type: application/json'
   -u admin@gmail.com:admin
@@ -68,7 +91,25 @@ curl -X POST \
 #### Get menu by date
 ```
 curl -X GET
-  'http://localhost:8080/api/menu/date/2023-02-04'
+  http://localhost:8080/api/menu/date/2023-02-04
+  -H 'Accept: application/json'
+  -u user@gmail.com:password
+```
+#### Vote
+```
+curl -X POST
+  http://localhost:8080/api/votes
+  -H 'Accept: application/json'
+  -u user@gmail.com:password
+  -H 'Content-Type: application/json' \
+  -d '{
+  "restaurantId": 0
+}'
+```
+#### Report: get guest list by restaurant id and date
+```
+curl -X GET
+  http://localhost:8080/api/report/restaurants/1/date/2023-02-03
   -H 'Accept: application/json'
   -u user@gmail.com:password
 ```
