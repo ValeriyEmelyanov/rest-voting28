@@ -13,7 +13,7 @@ import static com.example.restvoting28.config.WebSecurityConfig.PASSWORD_ENCODER
 @Transactional(readOnly = true)
 public interface UserRepository extends BaseRepository<User> {
 
-    @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
+    @Query("select u from User u where u.email = LOWER(:email)")
     Optional<User> findByEmailIgnoreCase(String email);
 
     default User getExistedByEmail(String email) {
