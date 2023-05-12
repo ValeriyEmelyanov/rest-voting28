@@ -40,6 +40,7 @@ Each restaurant provides a new menu each day.
 <br> *the application must be running on localhost*
 
 ### Resources
+* **/doc** - REST API documentation
 * **/api/profile** - user profile
 * **/api/admin/users** - users management
 * **/api/restaurants** - restaurants info
