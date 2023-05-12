@@ -48,8 +48,8 @@ Each restaurant provides a new menu each day.
 * **/api/admin/dishes** - restaurant dishes management
 * **/api/menu** - menu info
 * **/api/admin/menu** - menu management
-* **/votes** - voting
-* **/report** - reports
+* **/api/votes** - voting
+* **/api/report** - reports
 
 ### Examples of requests using the curl
 
