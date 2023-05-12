@@ -1,9 +1,10 @@
 package com.example.restvoting28.login.web;
 
+import com.example.restvoting28.common.validation.View;
+import com.example.restvoting28.login.UserRepository;
 import com.example.restvoting28.login.dto.PasswordRequest;
 import com.example.restvoting28.login.model.User;
-import com.example.restvoting28.login.UserRepository;
-import com.example.restvoting28.common.validation.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,7 +42,8 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@Validated(View.OnCreate.class) @RequestBody User user) {
+    public ResponseEntity<User> createWithLocation(
+            @Validated(View.OnCreate.class) @RequestBody @JsonView(View.AdminOnCreate.class) User user) {
         User created = super.create(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(URL + "/{id}")
@@ -52,7 +54,9 @@ public class AdminUserController extends AbstractUserController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public User update(@Validated(View.OnUpdate.class) @RequestBody User user, @PathVariable long id) {
+    public User updateWithResponse(
+            @Validated(View.OnUpdate.class) @RequestBody @JsonView(View.AdminOnUpdate.class) User user,
+            @PathVariable long id) {
         return super.update(user, id);
     }
 
@@ -62,9 +66,10 @@ public class AdminUserController extends AbstractUserController {
         super.delete(id);
     }
 
-    @PostMapping("/{id}/change_password")
+    @PostMapping("/{id}/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changePassword(@NotNull @Validated(View.Admin.class) @RequestBody PasswordRequest request, @PathVariable long id) {
+    public void changePassword(
+            @NotNull @Validated(View.Admin.class) @RequestBody PasswordRequest request, @PathVariable long id) {
         super.changePassword(request.getNewPassword(), id);
     }
 }

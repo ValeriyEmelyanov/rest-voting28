@@ -1,12 +1,13 @@
 package com.example.restvoting28.login.web;
 
-import com.example.restvoting28.login.dto.PasswordRequest;
 import com.example.restvoting28.common.exception.IllegalRequestDataException;
+import com.example.restvoting28.common.validation.View;
+import com.example.restvoting28.login.UserRepository;
+import com.example.restvoting28.login.dto.PasswordRequest;
 import com.example.restvoting28.login.model.Role;
 import com.example.restvoting28.login.model.User;
-import com.example.restvoting28.login.UserRepository;
 import com.example.restvoting28.security.AuthUser;
-import com.example.restvoting28.common.validation.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,7 +38,8 @@ public class ProfileController extends AbstractUserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@Validated(View.OnCreate.class) @RequestBody User user) {
+    public ResponseEntity<User> createWithLocation(
+            @Validated(View.OnCreate.class) @RequestBody @JsonView(View.ProfileOnCreate.class) User user) {
         user.setRoles(Set.of(Role.USER));
         User created = super.create(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
@@ -49,7 +51,9 @@ public class ProfileController extends AbstractUserController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public User update(@Validated(View.OnUpdate.class) @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
+    public User update(
+            @Validated(View.OnUpdate.class) @RequestBody @JsonView(View.ProfileOnUpdate.class) User user,
+            @AuthenticationPrincipal AuthUser authUser) {
         user.setRoles(authUser.getUser().getRoles());
         return super.update(user, authUser.id());
     }
@@ -60,9 +64,11 @@ public class ProfileController extends AbstractUserController {
         super.delete(authUser.id());
     }
 
-    @PostMapping("/change_password")
+    @PostMapping("/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changePassword(@NotNull @Validated(View.Profile.class) @RequestBody PasswordRequest request, @AuthenticationPrincipal AuthUser authUser) {
+    public void changePassword(
+            @NotNull @Validated(View.Profile.class) @RequestBody PasswordRequest request,
+            @AuthenticationPrincipal AuthUser authUser) {
         if (!PASSWORD_ENCODER.matches(request.getOldPassword(), authUser.getUser().getPassword())) {
             throw new IllegalRequestDataException("Wrong old password");
         }

@@ -4,6 +4,7 @@ import com.example.restvoting28.common.model.BaseEntity;
 import com.example.restvoting28.common.validation.NoHtml;
 import com.example.restvoting28.common.validation.View;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -32,20 +33,24 @@ public class User extends BaseEntity implements Serializable {
     @NotEmpty
     @Size(max = 128)
     @NoHtml
+    @JsonView({View.Admin.class, View.Profile.class})
     private String email;
 
     @Column(name = "first_name")
     @Size(max = 128)
     @NoHtml
+    @JsonView({View.Admin.class, View.Profile.class})
     private String firstName;
 
     @Column(name = "last_name")
     @Size(max = 128)
     @NoHtml
+    @JsonView({View.Admin.class, View.Profile.class})
     private String lastName;
 
     @Column(name = "contact")
     @Size(max = 255)
+    @JsonView({View.Admin.class, View.Profile.class})
     private String contact;
 
     @Column(name = "password")
@@ -53,12 +58,14 @@ public class User extends BaseEntity implements Serializable {
     @Size(min = 5, max = 128, groups = {View.OnCreate.class})
     // https://stackoverflow.com/a/12505165/548473
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonView(View.OnCreate.class)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
+    @JsonView(View.Admin.class)
     private Set<Role> roles;
 
     public void setEmail(String email) {

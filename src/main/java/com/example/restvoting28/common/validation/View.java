@@ -8,4 +8,9 @@ public class View {
 
     public interface Admin extends Default {}
     public interface Profile extends Default {}
+
+    public interface AdminOnCreate extends Admin, OnCreate {}
+    public interface AdminOnUpdate extends Admin, OnUpdate {}
+    public interface ProfileOnCreate extends Profile, OnCreate {}
+    public interface ProfileOnUpdate extends Profile, OnUpdate {}
 }
