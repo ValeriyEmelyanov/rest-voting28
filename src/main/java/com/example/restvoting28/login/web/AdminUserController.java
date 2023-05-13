@@ -6,6 +6,8 @@ import com.example.restvoting28.login.dto.PasswordRequest;
 import com.example.restvoting28.login.model.User;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(AdminUserController.URL)
+@CacheConfig(cacheNames = "users")
 @Validated
 public class AdminUserController extends AbstractUserController {
     public static final String URL = "/api/admin/users";
@@ -62,6 +65,7 @@ public class AdminUserController extends AbstractUserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "users", allEntries = true)
     public void delete(@PathVariable long id) {
         super.delete(id);
     }

@@ -23,6 +23,7 @@ Each restaurant provides a new menu each day.
 * Spring Boot
 * Spring security, Basic authentication
 * Spring Data JPA
+* Spring cache, Caffeine
 * H2 in memory database
 * OpenAPI
 * Lombok

@@ -35,6 +35,10 @@ spring:
       name: user
       password: password
       roles: USER
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
+  cache:
+    cache-names: users
+    caffeine.spec: maximumSize=10000,expireAfterAccess=5m
 
 logging:
   level:
