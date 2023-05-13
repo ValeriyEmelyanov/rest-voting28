@@ -13,4 +13,6 @@ public interface MenuRepository extends BaseRepository<Menu> {
     List<Menu> findAllByDate(LocalDate date);
 
     Optional<Menu> findByRestaurantIdAndDate(long restaurantId, LocalDate date);
+
+    boolean existsByRestaurantIdAndDate(long restaurantId, LocalDate date);
 }

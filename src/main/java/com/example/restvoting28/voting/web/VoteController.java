@@ -1,6 +1,8 @@
 package com.example.restvoting28.voting.web;
 
+import com.example.restvoting28.common.exception.IllegalRequestDataException;
 import com.example.restvoting28.common.exception.NotFoundException;
+import com.example.restvoting28.restaurant.MenuRepository;
 import com.example.restvoting28.security.AuthUser;
 import com.example.restvoting28.voting.VoteRepository;
 import com.example.restvoting28.voting.dto.VoteRequest;
@@ -25,6 +27,7 @@ public class VoteController {
     public static final String URL = "/api/votes";
 
     private final VoteRepository repository;
+    private final MenuRepository menuRepository;
 
     @GetMapping
     public Vote get(@AuthenticationPrincipal AuthUser authUser) {
@@ -45,7 +48,11 @@ public class VoteController {
     public Vote vote(@Valid @RequestBody VoteRequest request, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Vote userId={}", authUser.id());
         checkCurrentTime();
-        return repository.prepareAndSave(new Vote(authUser.id(), request.getRestaurantId(), LocalDate.now()));
+        LocalDate date = LocalDate.now();
+        if (!menuRepository.existsByRestaurantIdAndDate(request.getRestaurantId(), date)) {
+            throw new IllegalRequestDataException("No menu for restaurantId=" + request.getRestaurantId() + " today");
+        }
+        return repository.prepareAndSave(new Vote(authUser.id(), request.getRestaurantId(), date));
     }
 
     @DeleteMapping
