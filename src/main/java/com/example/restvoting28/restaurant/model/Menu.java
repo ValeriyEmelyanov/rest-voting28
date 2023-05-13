@@ -40,7 +40,7 @@ public class Menu extends BaseEntity implements HasOwner {
     private LocalDate date;
 
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @BatchSize(size = 200)
+    @BatchSize(size = 20)
     @Fetch(FetchMode.SUBSELECT)
     private List<MenuItem> items;
 
