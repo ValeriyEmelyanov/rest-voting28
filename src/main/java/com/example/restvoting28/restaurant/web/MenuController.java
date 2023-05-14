@@ -7,6 +7,7 @@ import com.example.restvoting28.restaurant.dto.MenuResponse;
 import com.example.restvoting28.restaurant.model.Menu;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -73,6 +74,7 @@ public class MenuController {
     }
 
     @PutMapping(path = WRITE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(value = "menu", key = "{#menu.restaurantId, #menu.date}")
     public MenuResponse update(@Validated @RequestBody Menu menu, @RequestParam long id) {
         log.info("Update the menu {} with id={}", menu, id);
         assureIdConsistent(menu, id);
