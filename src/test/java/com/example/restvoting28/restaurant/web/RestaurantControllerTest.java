@@ -3,7 +3,6 @@ package com.example.restvoting28.restaurant.web;
 import com.example.restvoting28.AbstractControllerTest;
 import com.example.restvoting28.restaurant.RestaurantRepository;
 import com.example.restvoting28.restaurant.model.Restaurant;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,6 +11,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.example.restvoting28.common.JsonUtil.readValue;
+import static com.example.restvoting28.common.JsonUtil.writeValue;
 import static com.example.restvoting28.restaurant.web.RestaurantController.READ_PATH;
 import static com.example.restvoting28.restaurant.web.RestaurantController.URL;
 import static com.example.restvoting28.restaurant.web.RestaurantController.WRITE_PATH;
@@ -34,8 +35,6 @@ class RestaurantControllerTest extends AbstractControllerTest {
     private static final String READ_URL = URL + READ_PATH;
     private static final String WRITE_URL = URL + WRITE_PATH;
 
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private RestaurantRepository repository;
 
@@ -79,12 +78,12 @@ class RestaurantControllerTest extends AbstractControllerTest {
         Restaurant newRestaurant = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(WRITE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newRestaurant)))
+                .content(writeValue(newRestaurant)))
                 .andDo(print())
                 .andExpect(status().isCreated());
         MvcResult result = action.andReturn();
         String contentAsString = result.getResponse().getContentAsString();
-        Restaurant created = objectMapper.readValue(contentAsString, Restaurant.class);
+        Restaurant created = readValue(contentAsString, Restaurant.class);
 
         assertEquals(newRestaurant.getName(), created.getName());
         long newId = created.id();
@@ -97,7 +96,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         Restaurant newRestaurant = getNew();
         perform(MockMvcRequestBuilders.post(WRITE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newRestaurant)))
+                .content(writeValue(newRestaurant)))
                 .andExpect(status().isForbidden());
     }
 
@@ -107,7 +106,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         Restaurant newRestaurant = getNewWithHtml();
         perform(MockMvcRequestBuilders.post(WRITE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newRestaurant)))
+                .content(writeValue(newRestaurant)))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -117,12 +116,12 @@ class RestaurantControllerTest extends AbstractControllerTest {
         Restaurant updatedRestaurant = getUpdated();
         ResultActions action = perform(MockMvcRequestBuilders.put(WRITE_URL + "/" + RESTAURANT_CRAZY_COOK_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedRestaurant)))
+                .content(writeValue(updatedRestaurant)))
                 .andDo(print())
                 .andExpect(status().isOk());
         MvcResult result = action.andReturn();
         String contentAsString = result.getResponse().getContentAsString();
-        Restaurant updated = objectMapper.readValue(contentAsString, Restaurant.class);
+        Restaurant updated = readValue(contentAsString, Restaurant.class);
 
         assertEquals(updatedRestaurant.getName(), updated.getName());
         assertEquals(updatedRestaurant.getName(), repository.getExisted(RESTAURANT_CRAZY_COOK_ID).getName());
