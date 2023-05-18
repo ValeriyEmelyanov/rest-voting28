@@ -1,5 +1,6 @@
 package com.example.restvoting28.voting.web;
 
+import com.example.restvoting28.common.DateTimeService;
 import com.example.restvoting28.common.exception.IllegalRequestDataException;
 import com.example.restvoting28.common.exception.NotFoundException;
 import com.example.restvoting28.restaurant.MenuRepository;
@@ -28,11 +29,12 @@ public class VoteController {
 
     private final VoteRepository repository;
     private final MenuRepository menuRepository;
+    private final DateTimeService dateTimeService;
 
     @GetMapping
     public Vote get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("Get vote by userId={}", authUser.id());
-        LocalDate now = LocalDate.now();
+        LocalDate now = dateTimeService.dateNow();
         return repository.findByUserIdAndDate(authUser.id(), now)
                 .orElseThrow(() -> new NotFoundException("No vote by userId=" + authUser.id() + " and date=" + now));
     }
@@ -47,8 +49,8 @@ public class VoteController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Vote vote(@Valid @RequestBody VoteRequest request, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Vote userId={}", authUser.id());
-        checkCurrentTime();
-        LocalDate date = LocalDate.now();
+        checkCurrentTime(dateTimeService);
+        LocalDate date = dateTimeService.dateNow();
         if (!menuRepository.existsByRestaurantIdAndDate(request.getRestaurantId(), date)) {
             throw new IllegalRequestDataException("No menu for restaurantId=" + request.getRestaurantId() + " today");
         }
@@ -59,7 +61,7 @@ public class VoteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         log.info("Delete vote by userId={}", authUser.id());
-        checkCurrentTime();
-        repository.deleteExisted(authUser.id(), LocalDate.now());
+        checkCurrentTime(dateTimeService);
+        repository.deleteExisted(authUser.id(), dateTimeService.dateNow());
     }
 }

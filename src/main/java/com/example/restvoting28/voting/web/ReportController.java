@@ -1,5 +1,6 @@
 package com.example.restvoting28.voting.web;
 
+import com.example.restvoting28.common.DateTimeService;
 import com.example.restvoting28.voting.VoteRepository;
 import com.example.restvoting28.voting.dto.GuestCountResponse;
 import com.example.restvoting28.voting.dto.GuestResponse;
@@ -18,11 +19,12 @@ public class ReportController {
     public static final String URL = "/api/report";
 
     private final VoteRepository repository;
+    private final DateTimeService dateTimeService;
 
     @GetMapping("/restaurants/{restaurantId}")
     public List<GuestResponse> getGuestsByRestaurantId(@PathVariable long restaurantId) {
         log.info("Get guests by restaurantId={}", restaurantId);
-        return repository.getGuestsByRestaurantIdAndDate(restaurantId, LocalDate.now());
+        return repository.getGuestsByRestaurantIdAndDate(restaurantId, dateTimeService.dateNow());
     }
 
     @GetMapping("/restaurants/{restaurantId}/date/{date}")
@@ -34,7 +36,7 @@ public class ReportController {
     @GetMapping("/restaurants/{restaurantId}/count")
     public long getGuestsCountByRestaurantId(@PathVariable long restaurantId) {
         log.info("Count guests by restaurantId={}", restaurantId);
-        return repository.countAllByRestaurantIdAndDate(restaurantId, LocalDate.now());
+        return repository.countAllByRestaurantIdAndDate(restaurantId, dateTimeService.dateNow());
     }
 
     @GetMapping("/restaurants/{restaurantId}/count/date/{date}")
@@ -46,7 +48,7 @@ public class ReportController {
     @GetMapping("/restaurants/count")
     public List<GuestCountResponse> getGuestsCount() {
         log.info("Count guests");
-        return repository.countByDate(LocalDate.now());
+        return repository.countByDate(dateTimeService.dateNow());
     }
 
     @GetMapping("/restaurants/count/date/{date}")
