@@ -48,7 +48,7 @@ public class RestExceptionHandler {
         put(DataIntegrityViolationException.class, ErrorType.DATA_CONFLICT);
         put(IllegalArgumentException.class, ErrorType.BAD_DATA);
         put(NoHandlerFoundException.class, ErrorType.NOT_FOUND);
-        put(BindException.class, ErrorType.BAD_REQUEST);
+        put(BindException.class, ErrorType.BAD_DATA);
         put(ValidationException.class, ErrorType.BAD_DATA);
         put(HttpRequestMethodNotSupportedException.class, ErrorType.BAD_REQUEST);
         put(MissingServletRequestParameterException.class, ErrorType.BAD_REQUEST);
