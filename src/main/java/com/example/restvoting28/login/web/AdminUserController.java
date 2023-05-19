@@ -70,8 +70,9 @@ public class AdminUserController extends AbstractUserController {
         super.delete(id);
     }
 
-    @PostMapping("/{id}/change-password")
+    @PatchMapping("/{id}/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @JsonView(View.Admin.class)
     public void changePassword(
             @NotNull @Validated(View.Admin.class) @RequestBody PasswordRequest request, @PathVariable long id) {
         super.changePassword(request.getNewPassword(), id);

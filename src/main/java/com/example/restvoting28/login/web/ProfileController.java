@@ -64,7 +64,7 @@ public class ProfileController extends AbstractUserController {
         super.delete(authUser.id());
     }
 
-    @PostMapping("/change-password")
+    @PatchMapping("/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(
             @NotNull @Validated(View.Profile.class) @RequestBody PasswordRequest request,
