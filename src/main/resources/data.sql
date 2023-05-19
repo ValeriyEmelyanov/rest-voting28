@@ -23,7 +23,7 @@ values ('Dish 1-1', 1),
        ('Dish 3-2', 3),
        ('Dish 3-3', 3);
 
-insert into MENU (RESTAURANT_ID, DATE)
+insert into MENU (RESTAURANT_ID, DATED)
 values (1, '2023-02-03'),
        (2, '2023-02-03'),
        (3, '2023-02-03'),
@@ -42,7 +42,7 @@ values (1, 1, 120),
        (4, 2, 142),
        (4, 3, 62);
 
-insert into VOTE (USER_ID, RESTAURANT_ID, DATE)
+insert into VOTE (USER_ID, RESTAURANT_ID, DATED)
 values (1, 1, '2023-02-03'),
        (2, 2, '2023-02-03'),
        (1, 1, '2023-02-04'),

@@ -41,7 +41,7 @@ public class MenuController {
     @GetMapping(READ_PATH + "/date/{date}")
     public List<MenuResponse> getAllByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get all menu by date={}", date);
-        return repository.findAllByDate(date)
+        return repository.findAllByDated(date)
                 .stream()
                 .map(m -> conversionService.convert(m, MenuResponse.class))
                 .collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class MenuController {
     public MenuResponse getByRestaurantAndDate(
             @PathVariable long restaurantId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        Menu menu = repository.findByRestaurantIdAndDate(restaurantId, date)
+        Menu menu = repository.findByRestaurantIdAndDated(restaurantId, date)
                 .orElseThrow(() -> new NotFoundException("No menu by restaurantId=" + restaurantId + " and date=" + date));
         return conversionService.convert(menu, MenuResponse.class);
     }
@@ -74,7 +74,7 @@ public class MenuController {
     }
 
     @PutMapping(path = WRITE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @CacheEvict(value = "menu", key = "{#menu.restaurantId, #menu.date}")
+    @CacheEvict(value = "menu", key = "{#menu.restaurantId, #menu.dated}")
     public MenuResponse update(@Validated @RequestBody Menu menu, @RequestParam long id) {
         log.info("Update the menu {} with id={}", menu, id);
         assureIdConsistent(menu, id);

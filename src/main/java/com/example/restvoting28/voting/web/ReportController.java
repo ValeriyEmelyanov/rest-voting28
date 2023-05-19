@@ -24,25 +24,25 @@ public class ReportController {
     @GetMapping("/restaurants/{restaurantId}")
     public List<GuestResponse> getGuestsByRestaurantId(@PathVariable long restaurantId) {
         log.info("Get guests by restaurantId={}", restaurantId);
-        return repository.getGuestsByRestaurantIdAndDate(restaurantId, dateTimeService.dateNow());
+        return repository.getGuestsByRestaurantIdAndDated(restaurantId, dateTimeService.dateNow());
     }
 
     @GetMapping("/restaurants/{restaurantId}/date/{date}")
     public List<GuestResponse> getGuestsByRestaurantIdAndDate(@PathVariable long restaurantId, @PathVariable LocalDate date) {
         log.info("Get guests by restaurantId={} and date={}", restaurantId, date);
-        return repository.getGuestsByRestaurantIdAndDate(restaurantId, date);
+        return repository.getGuestsByRestaurantIdAndDated(restaurantId, date);
     }
 
     @GetMapping("/restaurants/{restaurantId}/count")
     public long getGuestsCountByRestaurantId(@PathVariable long restaurantId) {
         log.info("Count guests by restaurantId={}", restaurantId);
-        return repository.countAllByRestaurantIdAndDate(restaurantId, dateTimeService.dateNow());
+        return repository.countAllByRestaurantIdAndDated(restaurantId, dateTimeService.dateNow());
     }
 
     @GetMapping("/restaurants/{restaurantId}/count/date/{date}")
     public long getGuestsCountByRestaurantIdAndDate(@PathVariable long restaurantId, @PathVariable LocalDate date) {
         log.info("Count guests by restaurantId={} and date={}", restaurantId, date);
-        return repository.countAllByRestaurantIdAndDate(restaurantId, date);
+        return repository.countAllByRestaurantIdAndDated(restaurantId, date);
     }
 
     @GetMapping("/restaurants/count")

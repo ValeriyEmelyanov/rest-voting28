@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "date"}, name = "menu_restaurant_date_idx")})
+@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "dated"}, name = "menu_restaurant_dated_idx")})
 @Setter
 @Getter
 @NoArgsConstructor
@@ -35,9 +35,9 @@ public class Menu extends BaseEntity implements HasOwner {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long restaurantId;
 
-    @Column(name = "date", nullable = false, columnDefinition = "timestamp")
+    @Column(name = "dated", nullable = false, columnDefinition = "date")
     @NotNull
-    private LocalDate date;
+    private LocalDate dated;
 
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 20)

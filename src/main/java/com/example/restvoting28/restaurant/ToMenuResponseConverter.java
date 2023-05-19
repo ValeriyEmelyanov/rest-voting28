@@ -22,7 +22,7 @@ public class ToMenuResponseConverter implements Converter<Menu, MenuResponse> {
         return MenuResponse.builder()
                 .id(menu.id())
                 .restaurant(menu.getRestaurant())
-                .date(menu.getDate())
+                .dated(menu.getDated())
                 .items(responseItems)
                 .build();
     }

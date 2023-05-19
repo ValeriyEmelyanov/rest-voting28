@@ -35,14 +35,14 @@ public class VoteController {
     public Vote get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("Get vote by userId={}", authUser.id());
         LocalDate now = dateTimeService.dateNow();
-        return repository.findByUserIdAndDate(authUser.id(), now)
+        return repository.findByUserIdAndDated(authUser.id(), now)
                 .orElseThrow(() -> new NotFoundException("No vote by userId=" + authUser.id() + " and date=" + now));
     }
 
     @GetMapping("/date/{date}")
     public Vote getByDate(@PathVariable LocalDate date, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Get vote by userId={} and date={}", authUser.id(), date);
-        return repository.findByUserIdAndDate(authUser.id(), date)
+        return repository.findByUserIdAndDated(authUser.id(), date)
                 .orElseThrow(() -> new NotFoundException("No vote by userId=" + authUser.id() + " and date=" + date));
     }
 
@@ -51,7 +51,7 @@ public class VoteController {
         log.info("Vote userId={}", authUser.id());
         checkCurrentTime(dateTimeService);
         LocalDate date = dateTimeService.dateNow();
-        if (!menuRepository.existsByRestaurantIdAndDate(request.getRestaurantId(), date)) {
+        if (!menuRepository.existsByRestaurantIdAndDated(request.getRestaurantId(), date)) {
             throw new IllegalRequestDataException("No menu for restaurantId=" + request.getRestaurantId() + " today");
         }
         return repository.prepareAndSave(new Vote(authUser.id(), request.getRestaurantId(), date));

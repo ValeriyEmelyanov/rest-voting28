@@ -15,7 +15,7 @@ import org.springframework.lang.Nullable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date"}, name = "user_date_idx")})
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "dated"}, name = "user_dated_idx")})
 @Setter
 @Getter
 @NoArgsConstructor
@@ -40,13 +40,13 @@ public class Vote extends BaseEntity {
     @NotNull
     private Long restaurantId;
 
-    @Column(name = "date", nullable = false, columnDefinition = "timestamp")
+    @Column(name = "dated", nullable = false, columnDefinition = "date")
     @NotNull
-    private LocalDate date;
+    private LocalDate dated;
 
-    public Vote(Long userId, Long restaurantId, LocalDate date) {
+    public Vote(Long userId, Long restaurantId, LocalDate dated) {
         this.userId = userId;
         this.restaurantId = restaurantId;
-        this.date = date;
+        this.dated = dated;
     }
 }

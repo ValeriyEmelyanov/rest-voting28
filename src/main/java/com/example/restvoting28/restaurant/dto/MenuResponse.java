@@ -16,7 +16,7 @@ public class MenuResponse {
 
     private Restaurant restaurant;
 
-    private LocalDate date;
+    private LocalDate dated;
 
     private List<MenuItemResponse> items;
 }
