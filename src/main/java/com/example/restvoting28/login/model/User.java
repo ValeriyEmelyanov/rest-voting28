@@ -3,6 +3,8 @@ package com.example.restvoting28.login.model;
 import com.example.restvoting28.common.model.BaseEntity;
 import com.example.restvoting28.common.validation.NoHtml;
 import com.example.restvoting28.common.validation.View;
+import com.example.restvoting28.voting.model.Vote;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
@@ -15,9 +17,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -67,6 +72,11 @@ public class User extends BaseEntity implements Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     @JsonView(View.Admin.class)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<Vote> votes;
 
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;

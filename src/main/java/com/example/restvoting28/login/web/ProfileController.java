@@ -9,6 +9,8 @@ import com.example.restvoting28.login.model.User;
 import com.example.restvoting28.security.AuthUser;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import static com.example.restvoting28.config.WebSecurityConfig.PASSWORD_ENCODER
 
 @RestController
 @RequestMapping(ProfileController.URL)
+@CacheConfig(cacheNames = "users")
 @Validated
 public class ProfileController extends AbstractUserController {
     public static final String URL = "/api/profile";
@@ -60,12 +63,14 @@ public class ProfileController extends AbstractUserController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(key = "#authUser.user.email")
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         super.delete(authUser.id());
     }
 
     @PatchMapping("/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(key = "#authUser.user.email")
     public void changePassword(
             @NotNull @Validated(View.Profile.class) @RequestBody PasswordRequest request,
             @AuthenticationPrincipal AuthUser authUser) {

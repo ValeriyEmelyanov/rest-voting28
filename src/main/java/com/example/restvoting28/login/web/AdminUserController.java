@@ -65,13 +65,14 @@ public class AdminUserController extends AbstractUserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "users", allEntries = true)
+    @CacheEvict(allEntries = true)
     public void delete(@PathVariable long id) {
         super.delete(id);
     }
 
     @PatchMapping("/{id}/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     @JsonView(View.Admin.class)
     public void changePassword(
             @NotNull @Validated(View.Admin.class) @RequestBody PasswordRequest request, @PathVariable long id) {
