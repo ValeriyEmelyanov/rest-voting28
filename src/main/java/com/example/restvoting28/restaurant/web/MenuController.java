@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import static com.example.restvoting28.common.validation.ValidationUtil.assureIdConsistent;
 import static com.example.restvoting28.common.validation.ValidationUtil.assureOwnerIdConsistent;
-import static com.example.restvoting28.restaurant.MenuUtil.prepareToSave;
 
 @RestController
 @RequestMapping(MenuController.URL)
@@ -64,7 +63,7 @@ public class MenuController {
     @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MenuResponse> createWithLocation(@Validated(View.OnCreate.class) @RequestBody Menu menu) {
         log.info("Create the menu {}", menu);
-        Menu created = repository.save(prepareToSave(menu));
+        Menu created = repository.save(menu);
         Menu dbCreated = repository.getExisted(created.id());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(URL + READ_PATH + "/{id}")
@@ -80,7 +79,7 @@ public class MenuController {
         assureIdConsistent(menu, id);
         Menu dbMenu = repository.getExisted(id);
         assureOwnerIdConsistent(menu, dbMenu.ownerId());
-        repository.save(prepareToSave(menu));
+        repository.save(menu);
         Menu dbUpdated = repository.getExisted(id);
         return conversionService.convert(dbUpdated, MenuResponse.class);
     }

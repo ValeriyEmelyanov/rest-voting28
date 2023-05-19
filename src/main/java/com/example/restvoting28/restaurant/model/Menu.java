@@ -44,6 +44,15 @@ public class Menu extends BaseEntity implements HasOwner {
     @Fetch(FetchMode.SUBSELECT)
     private List<MenuItem> items;
 
+    public void setItems(List<MenuItem> items) {
+        if (items == null) {
+            this.items = List.of();
+        } else {
+            this.items = List.copyOf(items);
+            this.items.forEach(i -> i.setMenu(this));
+        }
+    }
+
     @Override
     @JsonIgnore
     public Long getOwnerId() {
