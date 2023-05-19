@@ -16,7 +16,7 @@ import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 @Entity
-@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "restaurant_id"}, name = "dish_name_restaurant_idx")})
+@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "name"}, name = "dish_restaurant_name_idx")})
 @Setter
 @Getter
 @NoArgsConstructor
