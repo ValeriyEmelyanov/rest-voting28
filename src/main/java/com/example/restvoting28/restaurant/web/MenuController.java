@@ -12,6 +12,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -61,26 +62,24 @@ public class MenuController {
     }
 
     @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MenuResponse> createWithLocation(@Validated(View.OnCreate.class) @RequestBody Menu menu) {
+    public ResponseEntity<Menu> createWithLocation(@Validated(View.OnCreate.class) @RequestBody Menu menu) {
         log.info("Create the menu {}", menu);
         Menu created = repository.save(menu);
-        Menu dbCreated = repository.getExisted(created.id());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path(URL + READ_PATH + "/{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
-        return ResponseEntity.created(uriOfNewResource).body(conversionService.convert(dbCreated, MenuResponse.class));
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(path = WRITE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
     @CacheEvict(value = "menu", key = "{#menu.restaurantId, #menu.dated}")
-    public MenuResponse update(@Validated @RequestBody Menu menu, @RequestParam long id) {
+    public Menu update(@Validated @RequestBody Menu menu, @RequestParam long id) {
         log.info("Update the menu {} with id={}", menu, id);
         assureIdConsistent(menu, id);
         Menu dbMenu = repository.getExisted(id);
         assureOwnerIdConsistent(menu, dbMenu.ownerId());
-        repository.save(menu);
-        Menu dbUpdated = repository.getExisted(id);
-        return conversionService.convert(dbUpdated, MenuResponse.class);
+        return repository.save(menu);
     }
 }

@@ -4,7 +4,6 @@ import com.example.restvoting28.common.HasOwner;
 import com.example.restvoting28.common.model.BaseEntity;
 import com.example.restvoting28.common.validation.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -32,7 +31,6 @@ public class Menu extends BaseEntity implements HasOwner {
 
     @Column(name = "restaurant_id", nullable = false)
     @NotNull(groups = View.OnCreate.class)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long restaurantId;
 
     @Column(name = "dated", nullable = false, columnDefinition = "date")
