@@ -20,7 +20,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.restvoting28.common.validation.ValidationUtil.assureIdConsistent;
 import static com.example.restvoting28.common.validation.ValidationUtil.assureOwnerIdConsistent;
@@ -39,26 +38,28 @@ public class MenuController {
     private final ConversionService conversionService;
 
     @GetMapping(READ_PATH + "/date/{date}")
-    public List<MenuResponse> getAllByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public List<Menu> getAllByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get all menu by date={}", date);
-        return repository.findAllByDated(date)
-                .stream()
-                .map(m -> conversionService.convert(m, MenuResponse.class))
-                .collect(Collectors.toList());
+        return repository.getAllByDate(date);
     }
 
     @GetMapping(READ_PATH + "/restaurant/{restaurantId}/date/{date}")
-    public MenuResponse getByRestaurantAndDate(
+    public Menu getByRestaurantAndDate(
             @PathVariable long restaurantId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        Menu menu = repository.findByRestaurantIdAndDated(restaurantId, date)
+        return repository.getByRestaurantIdAndDate(restaurantId, date)
                 .orElseThrow(() -> new NotFoundException("No menu by restaurantId=" + restaurantId + " and date=" + date));
-        return conversionService.convert(menu, MenuResponse.class);
     }
 
     @GetMapping(READ_PATH + "/{id}")
-    public MenuResponse get(@PathVariable long id) {
-        return conversionService.convert(repository.getExisted(id), MenuResponse.class);
+    public Menu get(@PathVariable long id) {
+        return repository.getExisted(id);
+    }
+
+    @GetMapping(READ_PATH + "/{id}/items")
+    public MenuResponse getWithItems(@PathVariable long id) {
+        Menu menu = repository.getWithItems(id).orElseThrow(() -> new NotFoundException("Menu with id=" + id + " not found"));
+        return conversionService.convert(menu, MenuResponse.class);
     }
 
     @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)

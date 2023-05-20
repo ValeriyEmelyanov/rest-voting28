@@ -9,9 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
@@ -37,9 +34,8 @@ public class Menu extends BaseEntity implements HasOwner {
     @NotNull
     private LocalDate dated;
 
-    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @BatchSize(size = 20)
-    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<MenuItem> items;
 
     public void setItems(List<MenuItem> items) {
