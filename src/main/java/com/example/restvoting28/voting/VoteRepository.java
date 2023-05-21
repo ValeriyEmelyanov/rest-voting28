@@ -39,6 +39,6 @@ public interface VoteRepository extends BaseRepository<Vote> {
 
     long countAllByRestaurantIdAndDated(long restaurant, LocalDate dated);
 
-    @Query("select new com.example.restvoting28.voting.dto.GuestCountResponse(v.restaurant.name, count(v.userId)) from Vote v where v.dated=:dated group by v.restaurant.name order by v.restaurant.name")
+    @Query("select new com.example.restvoting28.voting.dto.GuestCountResponse(v.restaurantId, v.restaurant.name, count(v.userId)) from Vote v where v.dated=:dated group by v.restaurant.name order by v.restaurant.name")
     List<GuestCountResponse> countByDate(LocalDate dated);
 }

@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GuestCountResponse {
+    private long restaurantId;
     private String restaurantName;
     private long voteCount;
 }

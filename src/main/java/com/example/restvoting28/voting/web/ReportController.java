@@ -16,43 +16,45 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ReportController {
-    public static final String URL = "/api/report";
+    public static final String URL = "/api";
+    public static final String GUESTS_PATH = "/admin/report/guests";
+    public static final String COUNTS_PATH = "/report/counts";
 
     private final VoteRepository repository;
     private final DateTimeService dateTimeService;
 
-    @GetMapping("/restaurants/{restaurantId}")
-    public List<GuestResponse> getGuestsByRestaurantId(@PathVariable long restaurantId) {
+    @GetMapping(GUESTS_PATH + "/today")
+    public List<GuestResponse> getGuestsByRestaurantId(@RequestParam long restaurantId) {
         log.info("Get guests by restaurantId={}", restaurantId);
         return repository.getGuestsByRestaurantIdAndDated(restaurantId, dateTimeService.dateNow());
     }
 
-    @GetMapping("/restaurants/{restaurantId}/date/{date}")
-    public List<GuestResponse> getGuestsByRestaurantIdAndDate(@PathVariable long restaurantId, @PathVariable LocalDate date) {
+    @GetMapping(GUESTS_PATH)
+    public List<GuestResponse> getGuestsByRestaurantIdAndDate(@RequestParam long restaurantId, @RequestParam LocalDate date) {
         log.info("Get guests by restaurantId={} and date={}", restaurantId, date);
         return repository.getGuestsByRestaurantIdAndDated(restaurantId, date);
     }
 
-    @GetMapping("/restaurants/{restaurantId}/count")
-    public long getGuestsCountByRestaurantId(@PathVariable long restaurantId) {
+    @GetMapping(COUNTS_PATH + "/today")
+    public long getGuestsCountByRestaurantId(@RequestParam long restaurantId) {
         log.info("Count guests by restaurantId={}", restaurantId);
         return repository.countAllByRestaurantIdAndDated(restaurantId, dateTimeService.dateNow());
     }
 
-    @GetMapping("/restaurants/{restaurantId}/count/date/{date}")
-    public long getGuestsCountByRestaurantIdAndDate(@PathVariable long restaurantId, @PathVariable LocalDate date) {
+    @GetMapping(COUNTS_PATH)
+    public long getGuestsCountByRestaurantIdAndDate(@RequestParam long restaurantId, @RequestParam LocalDate date) {
         log.info("Count guests by restaurantId={} and date={}", restaurantId, date);
         return repository.countAllByRestaurantIdAndDated(restaurantId, date);
     }
 
-    @GetMapping("/restaurants/count")
+    @GetMapping(COUNTS_PATH + "/all/today")
     public List<GuestCountResponse> getGuestsCount() {
         log.info("Count guests");
         return repository.countByDate(dateTimeService.dateNow());
     }
 
-    @GetMapping("/restaurants/count/date/{date}")
-    public List<GuestCountResponse> getGuestsCountByDate(@PathVariable LocalDate date) {
+    @GetMapping(COUNTS_PATH + "/all")
+    public List<GuestCountResponse> getGuestsCountByDate(@RequestParam LocalDate date) {
         log.info("Count guests by date={}", date);
         return repository.countByDate(date);
     }

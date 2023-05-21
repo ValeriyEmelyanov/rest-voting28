@@ -50,7 +50,8 @@ Each restaurant provides a new menu each day.
 * **/api/menu** - menu info
 * **/api/admin/menu** - menu management
 * **/api/votes** - voting
-* **/api/report** - reports
+* **/api/admin/report/guests** - reports with guests details
+* **/api/report/counts** - reports with guests counts
 
 ### Examples of requests using the curl
 
@@ -93,7 +94,7 @@ curl -X POST \
 #### Get menu by date
 ```
 curl -X GET
-  http://localhost:8080/api/menu/date/2023-02-04
+  http://localhost:8080/api/menu?date=2023-02-03
   -H 'Accept: application/json'
   -u user@gmail.com:password
 ```
@@ -111,7 +112,7 @@ curl -X POST
 #### Report: get guest list by restaurant id and date
 ```
 curl -X GET
-  http://localhost:8080/api/report/restaurants/1/date/2023-02-03
+  http://localhost:8080/api/admin/report/guests?restaurantId=1&date=2023-02-04
   -H 'Accept: application/json'
-  -u user@gmail.com:password
+  -u admin@gmail.com:admin
 ```
