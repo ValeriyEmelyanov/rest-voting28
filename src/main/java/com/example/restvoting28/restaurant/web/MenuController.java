@@ -37,16 +37,16 @@ public class MenuController {
     private final MenuRepository repository;
     private final ConversionService conversionService;
 
-    @GetMapping(READ_PATH + "/date/{date}")
-    public List<Menu> getAllByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    @GetMapping(value = READ_PATH)
+    public List<Menu> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get all menu by date={}", date);
         return repository.getAllByDate(date);
     }
 
-    @GetMapping(READ_PATH + "/restaurant/{restaurantId}/date/{date}")
+    @GetMapping(value = READ_PATH + "/by-restaurant")
     public Menu getByRestaurantAndDate(
-            @PathVariable long restaurantId,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @RequestParam long restaurantId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return repository.getByRestaurantIdAndDate(restaurantId, date)
                 .orElseThrow(() -> new NotFoundException("No menu by restaurantId=" + restaurantId + " and date=" + date));
     }
