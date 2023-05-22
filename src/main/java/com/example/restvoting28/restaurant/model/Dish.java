@@ -1,6 +1,5 @@
 package com.example.restvoting28.restaurant.model;
 
-import com.example.restvoting28.common.HasOwner;
 import com.example.restvoting28.common.model.BaseEntity;
 import com.example.restvoting28.common.validation.NoHtml;
 import com.example.restvoting28.common.validation.View;
@@ -20,7 +19,7 @@ import org.springframework.lang.Nullable;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Dish extends BaseEntity implements HasOwner {
+public class Dish extends BaseEntity{
     @Column(name = "name", nullable = false)
     @NotBlank
     @NoHtml
@@ -38,15 +37,4 @@ public class Dish extends BaseEntity implements HasOwner {
     @NotNull(groups = View.OnCreate.class)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long restaurantId;
-
-    @JsonIgnore
-    @Override
-    public Long getOwnerId() {
-        return restaurantId;
-    }
-
-    @Override
-    public void setOwnerId(Long ownerId) {
-        this.restaurantId = ownerId;
-    }
 }

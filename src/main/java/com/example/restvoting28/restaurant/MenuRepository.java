@@ -27,6 +27,9 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query("select m from Menu m where m.dated=:date")
     List<Menu> getAllByDate(LocalDate date);
 
+    @Query("select m from Menu m where m.id=:id and m.restaurantId=:restaurantId")
+    Optional<Menu> getBelonged(long id, long restaurantId);
+
     @Query("select m from Menu m where m.restaurantId=:restaurantId and m.dated=:date")
     @Cacheable(value = "menu", key = "{#restaurantId, #date}")
     Optional<Menu> getByRestaurantIdAndDate(long restaurantId, LocalDate date);

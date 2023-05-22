@@ -1,10 +1,12 @@
 package com.example.restvoting28.restaurant.web;
 
+import com.example.restvoting28.common.exception.IllegalRequestDataException;
 import com.example.restvoting28.common.exception.NotFoundException;
 import com.example.restvoting28.common.validation.View;
 import com.example.restvoting28.restaurant.MenuRepository;
 import com.example.restvoting28.restaurant.dto.MenuResponse;
 import com.example.restvoting28.restaurant.model.Menu;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,7 +24,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.restvoting28.common.validation.ValidationUtil.assureIdConsistent;
-import static com.example.restvoting28.common.validation.ValidationUtil.assureOwnerIdConsistent;
 
 @RestController
 @RequestMapping(MenuController.URL)
@@ -38,12 +39,14 @@ public class MenuController {
     private final ConversionService conversionService;
 
     @GetMapping(value = READ_PATH)
+    @JsonView(View.Profile.class)
     public List<Menu> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get all menu by date={}", date);
         return repository.getAllByDate(date);
     }
 
     @GetMapping(value = READ_PATH + "/by-restaurant")
+    @JsonView(View.Profile.class)
     public Menu getByRestaurantAndDate(
             @RequestParam long restaurantId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -52,6 +55,7 @@ public class MenuController {
     }
 
     @GetMapping(READ_PATH + "/{id}")
+    @JsonView(View.Profile.class)
     public Menu get(@PathVariable long id) {
         return repository.getExisted(id);
     }
@@ -63,6 +67,7 @@ public class MenuController {
     }
 
     @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @JsonView(View.Admin.class)
     public ResponseEntity<Menu> createWithLocation(@Validated(View.OnCreate.class) @RequestBody Menu menu) {
         log.info("Create the menu {}", menu);
         Menu created = repository.save(menu);
@@ -76,11 +81,12 @@ public class MenuController {
     @PutMapping(path = WRITE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @CacheEvict(value = "menu", key = "{#menu.restaurantId, #menu.dated}")
+    @JsonView(View.Admin.class)
     public Menu update(@Validated @RequestBody Menu menu, @RequestParam long id) {
         log.info("Update the menu {} with id={}", menu, id);
         assureIdConsistent(menu, id);
-        Menu dbMenu = repository.getExisted(id);
-        assureOwnerIdConsistent(menu, dbMenu.ownerId());
+        repository.getBelonged(id, menu.getRestaurantId())
+                .orElseThrow(() -> new IllegalRequestDataException("Menu id=" + id + " doesn't exist or doesn't belong to Restaurant id=" + menu.getRestaurantId()));
         return repository.save(menu);
     }
 }

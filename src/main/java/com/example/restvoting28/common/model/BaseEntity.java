@@ -1,6 +1,8 @@
 package com.example.restvoting28.common.model;
 
+import com.example.restvoting28.common.validation.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -24,6 +26,7 @@ public abstract class BaseEntity implements Persistable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY) // https://stackoverflow.com/a/28025008/548473
+    @JsonView({View.Admin.class, View.Profile.class})
     protected Long id;
 
     // doesn't work for hibernate lazy proxy

@@ -1,9 +1,9 @@
 package com.example.restvoting28.restaurant.model;
 
-import com.example.restvoting28.common.HasOwner;
 import com.example.restvoting28.common.model.BaseEntity;
 import com.example.restvoting28.common.validation.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Menu extends BaseEntity implements HasOwner {
+public class Menu extends BaseEntity {
     @Nullable
     @ManyToOne
     @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
@@ -28,14 +28,16 @@ public class Menu extends BaseEntity implements HasOwner {
 
     @Column(name = "restaurant_id", nullable = false)
     @NotNull(groups = View.OnCreate.class)
+    @JsonView({View.Admin.class, View.Profile.class})
     private Long restaurantId;
 
     @Column(name = "dated", nullable = false, columnDefinition = "date")
     @NotNull
+    @JsonView({View.Admin.class, View.Profile.class})
     private LocalDate dated;
 
     @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonView(View.Admin.class)
     private List<MenuItem> items;
 
     public void setItems(List<MenuItem> items) {
@@ -45,16 +47,5 @@ public class Menu extends BaseEntity implements HasOwner {
             this.items = List.copyOf(items);
             this.items.forEach(i -> i.setMenu(this));
         }
-    }
-
-    @Override
-    @JsonIgnore
-    public Long getOwnerId() {
-        return restaurantId;
-    }
-
-    @Override
-    public void setOwnerId(Long ownerId) {
-        this.restaurantId = ownerId;
     }
 }

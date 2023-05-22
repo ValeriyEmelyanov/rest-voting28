@@ -1,5 +1,6 @@
 package com.example.restvoting28.restaurant.web;
 
+import com.example.restvoting28.common.exception.IllegalRequestDataException;
 import com.example.restvoting28.common.validation.View;
 import com.example.restvoting28.restaurant.DishRepository;
 import com.example.restvoting28.restaurant.model.Dish;
@@ -15,7 +16,6 @@ import java.net.URI;
 import java.util.List;
 
 import static com.example.restvoting28.common.validation.ValidationUtil.assureIdConsistent;
-import static com.example.restvoting28.common.validation.ValidationUtil.assureOwnerIdConsistent;
 
 @RestController
 @RequestMapping(DishController.URL)
@@ -54,7 +54,8 @@ public class DishController {
     public Dish update(@Validated(View.OnUpdate.class) @RequestBody Dish dish, @PathVariable long id) {
         log.info("Update the dish {} with id={}", dish, id);
         assureIdConsistent(dish, id);
-        assureOwnerIdConsistent(dish, repository.getExisted(id).getOwnerId());
+        repository.getBelonged(id, dish.getRestaurantId())
+                .orElseThrow(() -> new IllegalRequestDataException("Dish id=" + id + " doesn't exist or doesn't belong to Restaurant id=" + dish.getRestaurantId()));
         return repository.save(dish);
     }
 }
