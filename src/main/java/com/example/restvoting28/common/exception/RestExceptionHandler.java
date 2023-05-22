@@ -42,7 +42,7 @@ public class RestExceptionHandler {
         put(NotFoundException.class, ErrorType.NOT_FOUND);
         put(DataConflictException.class, ErrorType.DATA_CONFLICT);
         put(IllegalRequestDataException.class, ErrorType.BAD_DATA);
-        put(WrongTimeException.class, ErrorType.BAD_REQUEST);
+        put(WrongTimeException.class, ErrorType.BAD_DATA);
         put(AppException.class, ErrorType.APP_ERROR);
         put(EntityNotFoundException.class, ErrorType.DATA_CONFLICT);
         put(DataIntegrityViolationException.class, ErrorType.DATA_CONFLICT);

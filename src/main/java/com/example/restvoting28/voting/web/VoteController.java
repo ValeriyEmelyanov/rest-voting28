@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static com.example.restvoting28.voting.VoteUtil.checkCurrentTime;
 
@@ -49,19 +50,19 @@ public class VoteController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Vote vote(@Valid @RequestBody VoteRequest request, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Vote userId={}", authUser.id());
-        checkCurrentTime(dateTimeService);
-        LocalDate date = dateTimeService.dateNow();
-        if (!menuRepository.existsByRestaurantIdAndDated(request.getRestaurantId(), date)) {
+        LocalDateTime now = LocalDateTime.now();
+        checkCurrentTime(now.toLocalTime());
+        if (!menuRepository.existsByRestaurantIdAndDated(request.getRestaurantId(), now.toLocalDate())) {
             throw new IllegalRequestDataException("No menu for restaurantId=" + request.getRestaurantId() + " today");
         }
-        return repository.prepareAndSave(new Vote(authUser.id(), request.getRestaurantId(), date));
+        return repository.prepareAndSave(new Vote(authUser.id(), request.getRestaurantId(), now.toLocalDate()));
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         log.info("Delete vote by userId={}", authUser.id());
-        checkCurrentTime(dateTimeService);
+        checkCurrentTime(dateTimeService.timeNow());
         repository.deleteExisted(authUser.id(), dateTimeService.dateNow());
     }
 }
