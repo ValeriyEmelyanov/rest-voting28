@@ -17,7 +17,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "dated"}, name = "menu_restaurant_dated_idx")})
+@Table(name = "menu",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "dated"}, name = "menu_restaurant_dated_idx")},
+        indexes = {@Index(name = "menu_dated_idx", columnList = "dated")})
 @Setter
 @Getter
 @NoArgsConstructor

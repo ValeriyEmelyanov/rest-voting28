@@ -15,7 +15,12 @@ import org.springframework.lang.Nullable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "dated"}, name = "user_dated_idx")})
+@Table(name = "vote",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "dated"}, name = "vote_user_dated_idx")},
+        indexes = {
+                @Index(name = "vote_restaurant_dated_idx", columnList = "restaurant_id, dated"),
+                @Index(name = "vote_dated_idx", columnList = "dated")
+        })
 @Setter
 @Getter
 @NoArgsConstructor
