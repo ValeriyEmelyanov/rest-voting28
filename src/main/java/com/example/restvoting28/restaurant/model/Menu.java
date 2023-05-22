@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Menu extends BaseEntity {
     @Nullable
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
     @JsonIgnore
     private Restaurant restaurant;

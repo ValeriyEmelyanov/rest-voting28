@@ -22,7 +22,7 @@ public interface MenuRepository extends BaseRepository<Menu> {
         return get(id).orElseThrow(() -> new NotFoundException("Menu with id=" + id + " not found"));
     }
 
-    @Query("select m from Menu m left join fetch m.items where m.id=:id")
+    @Query("select m from Menu m left join fetch m.restaurant left join fetch m.items where m.id=:id")
     @Cacheable(value = "menu-with-items", key = "#id")
     Optional<Menu> getWithItems(long id);
 

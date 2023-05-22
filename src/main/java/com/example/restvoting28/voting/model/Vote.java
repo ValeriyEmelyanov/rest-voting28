@@ -26,7 +26,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Vote extends BaseEntity {
     @Nullable
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonIgnore
     private User user;
@@ -36,7 +36,7 @@ public class Vote extends BaseEntity {
     private Long userId;
 
     @Nullable
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
     @JsonIgnore
     private Restaurant restaurant;
