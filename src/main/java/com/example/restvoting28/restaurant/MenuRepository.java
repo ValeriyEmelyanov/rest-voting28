@@ -35,6 +35,7 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Cacheable(value = "menu", key = "{#restaurantId, #date}")
     Optional<Menu> getByRestaurantIdAndDate(long restaurantId, LocalDate date);
 
+    @Query(nativeQuery = true, value = "select case when count(*) > 0 then true else false end from MENU m inner join MENU_ITEM i on m.restaurant_id=:restaurantId and m.dated=:date and m.id=i.menu_id limit 1")
     @Cacheable(value = "menu-existing", key = "{#restaurantId, #date}")
     boolean existsByRestaurantIdAndDated(long restaurantId, LocalDate date);
 }
