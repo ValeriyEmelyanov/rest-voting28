@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,5 +89,12 @@ public class MenuController {
         repository.getBelonged(id, menu.getRestaurantId())
                 .orElseThrow(() -> new IllegalRequestDataException("Menu id=" + id + " doesn't exist or doesn't belong to Restaurant id=" + menu.getRestaurantId()));
         return repository.save(menu);
+    }
+
+    @DeleteMapping(WRITE_PATH + "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = {"menu", "menu-existing"}, allEntries = true)
+    public void delete(@PathVariable long id) {
+        repository.deleteExisted(id);
     }
 }
