@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -68,6 +70,7 @@ public class MenuController {
     }
 
     @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(value = {"menu", "menu-existing", "menu-with-items"}, allEntries = true)
     @JsonView(View.Admin.class)
     public ResponseEntity<Menu> createWithLocation(@Validated(View.OnCreate.class) @RequestBody Menu menu) {
         log.info("Create the menu {}", menu);
@@ -81,7 +84,14 @@ public class MenuController {
 
     @PutMapping(path = WRITE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @CacheEvict(value = "menu", key = "{#menu.restaurantId, #menu.dated}")
+    @Caching(
+            evict = {
+                    @CacheEvict(value = {"menu", "menu-existing"}, allEntries = true)
+            },
+            put = {
+                    @CachePut(value = "menu-with-items", key = "#id")
+            }
+    )
     @JsonView(View.Admin.class)
     public Menu update(@Validated @RequestBody Menu menu, @RequestParam long id) {
         log.info("Update the menu {} with id={}", menu, id);
@@ -93,7 +103,12 @@ public class MenuController {
 
     @DeleteMapping(WRITE_PATH + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = {"menu", "menu-existing"}, allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = {"menu", "menu-existing"}, allEntries = true),
+                    @CacheEvict(value = "menu-with-items", key = "#id")
+            }
+    )
     public void delete(@PathVariable long id) {
         repository.deleteExisted(id);
     }

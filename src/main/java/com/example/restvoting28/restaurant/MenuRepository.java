@@ -22,6 +22,7 @@ public interface MenuRepository extends BaseRepository<Menu> {
     }
 
     @Query("select m from Menu m left join fetch m.items where m.id=:id")
+    @Cacheable(value = "menu-with-items", key = "#id")
     Optional<Menu> getWithItems(long id);
 
     @Query("select m from Menu m where m.dated=:date")

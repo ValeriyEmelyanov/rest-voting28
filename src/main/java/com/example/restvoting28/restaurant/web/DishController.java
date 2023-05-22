@@ -6,6 +6,7 @@ import com.example.restvoting28.restaurant.DishRepository;
 import com.example.restvoting28.restaurant.model.Dish;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -51,6 +52,7 @@ public class DishController {
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(value = "menu-with-items", allEntries = true)
     public Dish update(@Validated(View.OnUpdate.class) @RequestBody Dish dish, @PathVariable long id) {
         log.info("Update the dish {} with id={}", dish, id);
         assureIdConsistent(dish, id);
