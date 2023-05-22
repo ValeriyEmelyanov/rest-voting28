@@ -1,6 +1,7 @@
 package com.example.restvoting28.restaurant;
 
 import com.example.restvoting28.common.BaseRepository;
+import com.example.restvoting28.common.exception.IllegalRequestDataException;
 import com.example.restvoting28.common.exception.NotFoundException;
 import com.example.restvoting28.restaurant.model.Menu;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,4 +39,10 @@ public interface MenuRepository extends BaseRepository<Menu> {
     @Query(nativeQuery = true, value = "select case when count(*) > 0 then true else false end from MENU m inner join MENU_ITEM i on m.restaurant_id=:restaurantId and m.dated=:date and m.id=i.menu_id limit 1")
     @Cacheable(value = "menu-existing", key = "{#restaurantId, #date}")
     boolean existsByRestaurantIdAndDated(long restaurantId, LocalDate date);
+
+    default void checkExists(long restaurantId, LocalDate date) {
+        if (!existsByRestaurantIdAndDated(restaurantId, date)) {
+            throw new IllegalRequestDataException("No menu for restaurantId=" + restaurantId + " on date=" + date);
+        }
+    }
 }
