@@ -38,24 +38,20 @@ public class User extends BaseEntity implements Serializable {
     @NotEmpty
     @Size(max = 128)
     @NoHtml
-    @JsonView({View.Admin.class, View.Profile.class})
     private String email;
 
     @Column(name = "first_name")
     @Size(max = 128)
     @NoHtml
-    @JsonView({View.Admin.class, View.Profile.class})
     private String firstName;
 
     @Column(name = "last_name")
     @Size(max = 128)
     @NoHtml
-    @JsonView({View.Admin.class, View.Profile.class})
     private String lastName;
 
     @Column(name = "contact")
     @Size(max = 255)
-    @JsonView({View.Admin.class, View.Profile.class})
     private String contact;
 
     @Column(name = "password")

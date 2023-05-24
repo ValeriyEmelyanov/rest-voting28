@@ -39,6 +39,9 @@ spring:
   cache:
     cache-names: users,menu,menu-existing,menu-with-items
     caffeine.spec: maximumSize=10000,expireAfterAccess=5m
+  jackson:
+    mapper:
+      default-view-inclusion: true
 
 logging:
   level:
