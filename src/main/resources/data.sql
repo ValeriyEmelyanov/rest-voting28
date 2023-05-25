@@ -23,9 +23,9 @@ values ('Dish 1-1', 1),
        ('Dish 3-1', 3),
        ('Dish 3-2', 3),
        ('Dish 3-3', 3),
-       ('Dish 4-1', 3),
-       ('Dish 4-2', 3),
-       ('Dish 4-3', 3);
+       ('Dish 4-1', 4),
+       ('Dish 4-2', 4),
+       ('Dish 4-3', 4);
 
 insert into MENU_ITEM (RESTAURANT_ID, DATED, DISH_ID, PRICE)
 values (1, CURRENT_DATE() - 1, 1, 120),
@@ -36,15 +36,15 @@ values (1, CURRENT_DATE() - 1, 1, 120),
        (2, CURRENT_DATE() - 1, 6, 41),
        (3, CURRENT_DATE() - 1, 7, 125),
        (3, CURRENT_DATE() - 1, 8, 135),
-       (3, CURRENT_DATE() - 1, 8, 55.5),
-       (4, CURRENT_DATE() - 1, 2, 142),
-       (4, CURRENT_DATE() - 1, 3, 62),
-       (1, CURRENT_DATE(), 4, 100),
-       (1, CURRENT_DATE(), 5, 100),
-       (1, CURRENT_DATE(), 6, 100),
-       (2, CURRENT_DATE(), 7, 110),
-       (2, CURRENT_DATE(), 8, 110),
-       (2, CURRENT_DATE(), 9, 110);
+       (3, CURRENT_DATE() - 1, 9, 55.5),
+       (4, CURRENT_DATE() - 1, 10, 142),
+       (4, CURRENT_DATE() - 1, 11, 62),
+       (1, CURRENT_DATE(), 1, 100),
+       (1, CURRENT_DATE(), 2, 100),
+       (1, CURRENT_DATE(), 3, 100),
+       (2, CURRENT_DATE(), 4, 110),
+       (2, CURRENT_DATE(), 5, 110),
+       (2, CURRENT_DATE(), 6, 110);
 
 insert into VOTE (USER_ID, RESTAURANT_ID, DATED)
 values (1, 1, CURRENT_DATE() - 1),

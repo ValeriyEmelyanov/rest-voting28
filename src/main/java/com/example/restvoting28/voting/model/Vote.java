@@ -18,8 +18,8 @@ import java.time.LocalDate;
 @Table(name = "vote",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "dated"}, name = "vote_user_dated_idx")},
         indexes = {
-                @Index(name = "vote_restaurant_dated_idx", columnList = "restaurant_id, dated"),
-                @Index(name = "vote_dated_idx", columnList = "dated")
+                @Index(columnList = "dated, restaurant_id", name = "vote_dated_restaurant_idx"),
+                @Index(columnList = "dated", name = "vote_dated_idx")
         })
 @Setter
 @Getter

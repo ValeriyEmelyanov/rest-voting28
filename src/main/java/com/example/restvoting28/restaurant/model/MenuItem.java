@@ -16,7 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "menu_item")
+@Table(name = "menu_item",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"dated", "restaurant_id", "dish_id"}, name = "menu_item_dated_restaurant_dish_idx")})
 @Setter
 @Getter
 @NoArgsConstructor
