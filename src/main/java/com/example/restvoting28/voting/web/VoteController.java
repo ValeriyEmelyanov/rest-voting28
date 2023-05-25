@@ -30,12 +30,19 @@ public class VoteController {
     private final VoteRepository repository;
     private final DateTimeService dateTimeService;
 
-    @GetMapping
-    public Vote get(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("Get vote by userId={}", authUser.id());
+    @GetMapping("/today")
+    public Vote getToday(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("Get vote by userId={} today", authUser.id());
         LocalDate now = dateTimeService.dateNow();
         return repository.findByUserIdAndDated(authUser.id(), now)
-                .orElseThrow(() -> new NotFoundException("No vote by userId=" + authUser.id() + " on date=" + now));
+                .orElseThrow(() -> new NotFoundException("Vote by userId=" + authUser.id() + " on date=" + now + " not found"));
+    }
+
+    @GetMapping
+    public Vote get(@RequestParam LocalDate date, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("Get vote by userId={} on date={}", authUser.id(), date);
+        return repository.findByUserIdAndDated(authUser.id(), date)
+                .orElseThrow(() -> new NotFoundException("Vote by userId=" + authUser.id() + " on date=" + date + " not found"));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
