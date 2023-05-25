@@ -12,5 +12,5 @@ import lombok.Setter;
 public class GuestCountResponse {
     private long restaurantId;
     private String restaurantName;
-    private long voteCount;
+    private long votesCount;
 }

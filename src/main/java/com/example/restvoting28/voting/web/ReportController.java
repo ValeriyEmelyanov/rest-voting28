@@ -17,19 +17,20 @@ import java.util.List;
 @Slf4j
 public class ReportController {
     public static final String URL = "/api";
-    public static final String GUESTS_PATH = "/admin/report/guests";
+    public static final String ADMIN_GUESTS_PATH = "/admin/report/guests";
+    public static final String ADMIN_COUNTS_PATH = "/admin/report/counts";
     public static final String COUNTS_PATH = "/report/counts";
 
     private final VoteRepository repository;
     private final DateTimeService dateTimeService;
 
-    @GetMapping(GUESTS_PATH + "/today")
+    @GetMapping(ADMIN_GUESTS_PATH + "/today")
     public List<GuestResponse> getGuestsByRestaurantId(@RequestParam long restaurantId) {
         log.info("Get guests by restaurantId={}", restaurantId);
         return repository.getGuestsByRestaurantIdAndDated(restaurantId, dateTimeService.dateNow());
     }
 
-    @GetMapping(GUESTS_PATH)
+    @GetMapping(ADMIN_GUESTS_PATH)
     public List<GuestResponse> getGuestsByRestaurantIdAndDate(@RequestParam long restaurantId, @RequestParam LocalDate date) {
         log.info("Get guests by restaurantId={} and date={}", restaurantId, date);
         return repository.getGuestsByRestaurantIdAndDated(restaurantId, date);
@@ -41,7 +42,7 @@ public class ReportController {
         return repository.countAllByRestaurantIdAndDated(restaurantId, dateTimeService.dateNow());
     }
 
-    @GetMapping(COUNTS_PATH)
+    @GetMapping(ADMIN_COUNTS_PATH)
     public long getGuestsCountByRestaurantIdAndDate(@RequestParam long restaurantId, @RequestParam LocalDate date) {
         log.info("Count guests by restaurantId={} and date={}", restaurantId, date);
         return repository.countAllByRestaurantIdAndDated(restaurantId, date);
@@ -53,7 +54,7 @@ public class ReportController {
         return repository.countByDate(dateTimeService.dateNow());
     }
 
-    @GetMapping(COUNTS_PATH + "/all")
+    @GetMapping(ADMIN_COUNTS_PATH + "/all")
     public List<GuestCountResponse> getGuestsCountByDate(@RequestParam LocalDate date) {
         log.info("Count guests by date={}", date);
         return repository.countByDate(date);
