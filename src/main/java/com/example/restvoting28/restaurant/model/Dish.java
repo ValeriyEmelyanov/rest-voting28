@@ -2,9 +2,7 @@ package com.example.restvoting28.restaurant.model;
 
 import com.example.restvoting28.common.model.BaseEntity;
 import com.example.restvoting28.common.validation.NoHtml;
-import com.example.restvoting28.common.validation.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +17,7 @@ import org.springframework.lang.Nullable;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Dish extends BaseEntity{
+public class Dish extends BaseEntity {
     @Column(name = "name", nullable = false)
     @NotBlank
     @NoHtml
@@ -34,7 +32,6 @@ public class Dish extends BaseEntity{
     private Restaurant restaurant;
 
     @Column(name = "restaurant_id", nullable = false)
-    @NotNull(groups = View.OnCreate.class)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull
     private Long restaurantId;
 }

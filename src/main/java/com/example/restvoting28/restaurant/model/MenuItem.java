@@ -1,37 +1,50 @@
 package com.example.restvoting28.restaurant.model;
 
 import com.example.restvoting28.common.model.BaseEntity;
-import com.example.restvoting28.common.validation.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "menu_item")
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MenuItem extends BaseEntity {
+    @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_id")
+    @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
     @JsonIgnore
-    private Menu menu;
+    private Restaurant restaurant;
+
+    @Column(name = "restaurant_id", nullable = false)
+    @NotNull
+    private Long restaurantId;
+
+    @Column(name = "dated", nullable = false, columnDefinition = "date")
+    @NotNull
+    private LocalDate dated;
 
     @Nullable
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_id", insertable = false, updatable = false)
     @JsonIgnore
     private Dish dish;
 
     @Column(name = "dish_id", nullable = false)
-    @NotNull(groups = View.OnCreate.class)
+    @NotNull
     private Long dishId;
 
     @Column(name = "price", nullable = false, precision = 12, scale = 2)

@@ -3,7 +3,6 @@ package com.example.restvoting28.voting.web;
 import com.example.restvoting28.common.DateTimeService;
 import com.example.restvoting28.common.exception.IllegalRequestDataException;
 import com.example.restvoting28.common.exception.NotFoundException;
-import com.example.restvoting28.restaurant.MenuRepository;
 import com.example.restvoting28.security.AuthUser;
 import com.example.restvoting28.voting.VoteRepository;
 import com.example.restvoting28.voting.dto.VoteRequest;
@@ -29,7 +28,6 @@ public class VoteController {
     public static final String URL = "/api/vote";
 
     private final VoteRepository repository;
-    private final MenuRepository menuRepository;
     private final DateTimeService dateTimeService;
 
     @GetMapping
@@ -45,7 +43,6 @@ public class VoteController {
     public Vote create(@Valid @RequestBody VoteRequest request, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Vote userId={}", authUser.id());
         LocalDate dateNow = dateTimeService.dateNow();
-        menuRepository.checkExists(request.getRestaurantId(), dateNow);
         repository.findByUserIdAndDated(authUser.id(), dateNow)
                 .ifPresent(v -> {
                     throw new IllegalRequestDataException("User id=" + v.getUserId() + " voted on date=" + v.getDated() + " already");
@@ -59,7 +56,6 @@ public class VoteController {
         log.info("Change vote userId={}", authUser.id());
         LocalDateTime now = dateTimeService.now();
         checkCurrentTime(now.toLocalTime());
-        menuRepository.checkExists(request.getRestaurantId(), now.toLocalDate());
         Vote dbVote = repository.findByUserIdAndDated(authUser.id(), now.toLocalDate())
                 .orElseThrow(() -> new IllegalRequestDataException("User id=" + authUser.id() + " don't voted on date=" + now.toLocalDate()));
         dbVote.setRestaurantId(request.getRestaurantId());

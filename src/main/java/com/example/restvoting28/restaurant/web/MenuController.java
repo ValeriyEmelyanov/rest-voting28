@@ -2,15 +2,16 @@ package com.example.restvoting28.restaurant.web;
 
 import com.example.restvoting28.common.exception.IllegalRequestDataException;
 import com.example.restvoting28.common.exception.NotFoundException;
-import com.example.restvoting28.common.validation.View;
-import com.example.restvoting28.restaurant.MenuRepository;
+import com.example.restvoting28.restaurant.MenuItemRepository;
+import com.example.restvoting28.restaurant.dto.MenuRequest;
 import com.example.restvoting28.restaurant.dto.MenuResponse;
-import com.example.restvoting28.restaurant.model.Menu;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.example.restvoting28.restaurant.model.MenuItem;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +26,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.example.restvoting28.common.validation.ValidationUtil.assureIdConsistent;
 
@@ -32,84 +36,126 @@ import static com.example.restvoting28.common.validation.ValidationUtil.assureId
 @RequestMapping(MenuController.URL)
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class MenuController {
     public static final String URL = "/api";
     public static final String READ_PATH = "/menu";
     public static final String WRITE_PATH = "/admin/menu";
+    public static final String ITEMS_PATH = "/items";
 
-    private final MenuRepository repository;
+    private final MenuItemRepository repository;
     private final ConversionService conversionService;
 
-    @GetMapping(value = READ_PATH)
-    @JsonView(View.Profile.class)
-    public List<Menu> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        log.info("Get all menu by date={}", date);
-        return repository.getAllByDate(date);
+    @GetMapping(READ_PATH)
+    @Cacheable(value = "menu-day", key = "#date")
+    public List<MenuResponse> getAllByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("Get all menu on date={}", date);
+        return repository.getAllByDate(date).stream()
+                .collect(Collectors.groupingBy(MenuItem::getRestaurantId))
+                .values().stream()
+                .map(items -> conversionService.convert(items, MenuResponse.class))
+                .filter(Objects::nonNull)
+                .toList();
     }
 
-    @GetMapping(value = READ_PATH + "/by-restaurant")
-    @JsonView(View.Profile.class)
-    public Menu getByRestaurantAndDate(
+    @GetMapping(READ_PATH + "/by-restaurant")
+    @Cacheable(value = "menu", key = "{#restaurantId, #date}")
+    public MenuResponse getByRestaurantIdAndDate(
             @RequestParam long restaurantId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return repository.getByRestaurantIdAndDate(restaurantId, date)
-                .orElseThrow(() -> new NotFoundException("No menu by restaurantId=" + restaurantId + " and date=" + date));
+        log.info("Get menu by restaurantId={} on date={}", restaurantId, date);
+        List<MenuItem> menuItems = repository.getAllByRestaurantIdAndDate(restaurantId, date);
+        if (menuItems.isEmpty()) {
+            throw new NotFoundException("Menu by restaurantId=" + restaurantId + " on date=" + date + " not found");
+        }
+        return conversionService.convert(menuItems, MenuResponse.class);
     }
 
-    @GetMapping(READ_PATH + "/{id}")
-    @JsonView(View.Profile.class)
-    public Menu get(@PathVariable long id) {
+    @GetMapping(READ_PATH + "/existing-by-restaurant")
+    public boolean existsByRestaurantIdAndDate(
+            @RequestParam long restaurantId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("Get menu existing by restaurantId={} on date={}", restaurantId, date);
+        return repository.existsByRestaurantIdAndDated(restaurantId, date);
+    }
+
+    @GetMapping(READ_PATH + ITEMS_PATH + "/{id}")
+    public MenuItem getItem(@PathVariable long id) {
+        log.info("Get menu item by id={}", id);
         return repository.getExisted(id);
     }
 
-    @GetMapping(READ_PATH + "/{id}/items")
-    public MenuResponse getWithItems(@PathVariable long id) {
-        Menu menu = repository.getWithItems(id).orElseThrow(() -> new NotFoundException("Menu with id=" + id + " not found"));
-        return conversionService.convert(menu, MenuResponse.class);
+    @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Caching(
+            put = {
+                    @CachePut(value = "menu", key = "{#menu.restaurantId, #menu.date}")
+            },
+            evict = {
+                    @CacheEvict(value = "menu-day", key = "#menu.date"),
+            })
+    public ResponseEntity<MenuResponse> createWithLocation(@Valid @RequestBody MenuRequest menu) {
+        log.info("Create menu {}", menu);
+        Long restaurantId = menu.getRestaurantId();
+        LocalDate date = menu.getDate();
+        List<MenuItem> items = menu.getItems().stream()
+                .map(i -> MenuItem.builder()
+                        .restaurantId(restaurantId)
+                        .dated(date)
+                        .dishId(i.getDishId())
+                        .price(i.getPrice())
+                        .build())
+                .toList();
+        List<MenuItem> created = repository.saveAll(items);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .path(URL + READ_PATH + "/by-restaurant?restaurantId={restaurantId}&date={date}")
+                .buildAndExpand(Map.of("restaurantId", restaurantId, "date", date))
+                .toUri();
+        return ResponseEntity.created(uriOfNewResource).body(conversionService.convert(created, MenuResponse.class));
     }
 
-    @PostMapping(path = WRITE_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @CacheEvict(value = {"menu", "menu-existing", "menu-with-items"}, allEntries = true)
-    @JsonView(View.Admin.class)
-    public ResponseEntity<Menu> createWithLocation(@Validated(View.OnCreate.class) @RequestBody Menu menu) {
-        log.info("Create the menu {}", menu);
-        Menu created = repository.save(menu);
+    @PostMapping(path = WRITE_PATH + ITEMS_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Caching(evict = {
+            @CacheEvict(value = "menu-day", key = "#menuItem.dated"),
+            @CacheEvict(value = "menu", key = "{#menuItem.restaurantId, #menuItem.dated}")
+    })
+    public ResponseEntity<MenuItem> createItemWithLocation(@Validated @RequestBody MenuItem menuItem) {
+        log.info("Create menu item {}", menuItem);
+        MenuItem created = repository.save(menuItem);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path(URL + READ_PATH + "/{id}")
+                .path(URL + WRITE_PATH + "/items/{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(path = WRITE_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = WRITE_PATH + ITEMS_PATH + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @Caching(
-            evict = {
-                    @CacheEvict(value = {"menu", "menu-existing"}, allEntries = true)
-            },
-            put = {
-                    @CachePut(value = "menu-with-items", key = "#id")
-            }
-    )
-    @JsonView(View.Admin.class)
-    public Menu update(@Validated @RequestBody Menu menu, @RequestParam long id) {
-        log.info("Update the menu {} with id={}", menu, id);
-        assureIdConsistent(menu, id);
-        repository.getBelonged(id, menu.getRestaurantId())
-                .orElseThrow(() -> new IllegalRequestDataException("Menu id=" + id + " doesn't exist or doesn't belong to Restaurant id=" + menu.getRestaurantId()));
-        return repository.save(menu);
+    @CacheEvict(value = {"menu", "menu-day"}, allEntries = true)
+    public MenuItem updateItem(@Validated @RequestBody MenuItem menuItem, @RequestParam long id) {
+        log.info("Update menu item {} with id={}", menuItem, id);
+        assureIdConsistent(menuItem, id);
+        repository.getBelonged(id, menuItem.getRestaurantId())
+                .orElseThrow(() -> new IllegalRequestDataException("Menu item id=" + id + " doesn't exist or doesn't belong to Restaurant id=" + menuItem.getRestaurantId()));
+        return repository.save(menuItem);
     }
 
-    @DeleteMapping(WRITE_PATH + "/{id}")
+    @DeleteMapping(WRITE_PATH + ITEMS_PATH + "/by-restaurant")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Caching(
-            evict = {
-                    @CacheEvict(value = {"menu", "menu-existing"}, allEntries = true),
-                    @CacheEvict(value = "menu-with-items", key = "#id")
-            }
-    )
-    public void delete(@PathVariable long id) {
+    @Caching(evict = {
+            @CacheEvict(value = "menu-day", key = "#menuItem.dated"),
+            @CacheEvict(value = "menu", key = "{#menuItem.restaurantId, #menuItem.dated}")
+    })
+    public void deleteAllItemsByRestaurantIdAndDate(
+            @RequestParam long restaurantId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("Delete menu items by restaurantId={} on date={}", restaurantId, date);
+        repository.deleteAllByRestaurantIdAndDateExisted(restaurantId, date);
+    }
+
+    @DeleteMapping(WRITE_PATH + ITEMS_PATH + "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = {"menu", "menu-day"}, allEntries = true)
+    public void deleteItem(@PathVariable long id) {
+        log.info("Delete menu item with id={}", id);
         repository.deleteExisted(id);
     }
 }
